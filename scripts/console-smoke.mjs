@@ -45,6 +45,11 @@ const contractMethods = [
   'signIn', 'loadMe', 'signOut', 'orgAnalytics', 'listAdventures', 'adventureAnalytics',
   'exportAnalyticsCSV', 'billingStatus', 'startCheckout', 'billingPortal', 'listInviteCodes',
   'setCredentials',
+  // Authoring. The mock implements all of these for real, not as stubs — a page
+  // that works on one backend and not the other means the seam is decorative.
+  'loadAdventure', 'createAdventure', 'updateAdventure', 'addStep', 'updateStep', 'deleteStep',
+  'uploadStepReference', 'approveStep', 'preflight', 'publishAdventure', 'archiveAdventure',
+  'reviseAdventure',
 ];
 for (const method of contractMethods) {
   check(`MockBackend.${method}`, typeof backend[method] === 'function');
@@ -108,6 +113,77 @@ await expectError('CSV export below the institutional tier', 'entitlement',
 await expectError('analytics for an adventure in another organization', 'not-found',
   () => backend.adventureAnalytics(1, 3));
 
+// ---- Authoring --------------------------------------------------------------
+// The rules below are the SERVER's, reproduced in the mock so the editor's real
+// screens — "why can't I publish this", "why did my approval disappear" — are
+// exercised without a backend.
+
+const draft = await backend.loadAdventure(1, 2);
+check('an adventure loads with its stops', Array.isArray(draft.steps) && draft.steps.length > 0);
+check('preflight failures ship with the read, not a second call',
+  Array.isArray(draft.preflightFailures));
+check('a draft with an unanchored stop cannot publish', draft.preflightFailures.length > 0);
+check('preflight failures name what to fix',
+  draft.preflightFailures.every((f) => typeof f.code === 'string' && typeof f.detail === 'string'));
+check('a missing coordinate is reported',
+  draft.preflightFailures.some((f) => f.code === 'missing_coordinate'));
+
+await expectError('publishing an adventure that fails preflight', 'conflict',
+  () => backend.publishAdventure(1, 2));
+
+// §12: EVERY edit clears approval, including one that changes nothing. A
+// conditional that preserved approval on a no-op edit is exactly the code path
+// the rule forbids, because "approved" has to mean a human saw THIS version.
+const approvedStep = draft.steps.find((s) => s.approved_at);
+const reEdited = await backend.updateStep(1, 2, approvedStep.id, {});
+check('a no-op edit still clears approval', reEdited.approved_at === null);
+
+const step = await backend.addStep(1, 2, { title: 'New stop', text: 'Stand here.' });
+check('a new stop starts unapproved', step.approved_at === null);
+check('a new stop starts without a reference photo', step.has_reference === false);
+check('stops are ordered as they are added', step.order === 3);
+
+await backend.updateStep(1, 2, step.id, { lat: 42.98, lng: -70.94 });
+const uploaded = await backend.uploadStepReference(1, 2, step.id, null);
+check('uploading a reference confirms it exists', uploaded.has_reference === true);
+check('and never returns the image or a URL to it',
+  !JSON.stringify(uploaded).match(/storage_key|url|http/i));
+
+const approved = await backend.approveStep(1, 2, step.id);
+check('approving a stop records it', Boolean(approved.step.approved_at));
+
+check('deleting a stop renumbers the rest', await backend.deleteStep(1, 2, step.id) === true);
+const afterDelete = await backend.loadAdventure(1, 2);
+check('orders stay contiguous after a delete',
+  afterDelete.steps.every((s, i) => s.order === i + 1));
+
+// A published adventure is immutable: someone could be standing at stop three.
+await expectError('editing a published adventure', 'conflict',
+  () => backend.updateAdventure(1, 1, { title: 'Renamed' }));
+const published = (await backend.listAdventures(1)).find((a) => a.id === 1);
+const revision = await backend.reviseAdventure(1, 1);
+check('revising a published adventure produces a new draft',
+  revision.status === 'draft' && revision.version === published.version + 1);
+check('and leaves the live version published', published.status === 'published');
+const revised = await backend.loadAdventure(1, revision.id);
+check('a revision carries its stops', revised.steps.length > 0);
+check('but none of them arrive pre-approved',
+  revised.steps.every((s) => s.approved_at === null));
+
+// The tier is the commercial gate, and it must read as billing (402 → route to
+// the plan screen), never as a permission error.
+await expectError('adding a stop beyond the tier limit', 'entitlement', async () => {
+  // Org 1 is Standard: 15 stops per adventure. Adventure 2 is the draft.
+  for (let i = 0; i < 20; i += 1) await backend.addStep(1, 2, { title: `Stop ${i}` });
+});
+// Org 2 is on Trial: one published adventure, and it already has one.
+await expectError('creating an adventure beyond the tier limit', 'entitlement',
+  () => backend.createAdventure(2, { title: 'A second walk' }));
+// A published adventure is immutable regardless of tier, and that check comes
+// first — otherwise the answer to "can I edit this?" would depend on billing.
+await expectError('adding a stop to a published adventure', 'conflict',
+  () => backend.addStep(2, 3, { title: 'Late addition' }));
+
 // ---- Past-due semantics -----------------------------------------------------
 
 const pastDue = await backend.billingStatus(3);
@@ -115,6 +191,17 @@ check('a past-due organization still reports its published adventures',
   pastDue.usage.published_adventures > 0);
 check('nothing in the payload marks published content as taken down',
   !JSON.stringify(pastDue).includes('unpublished'));
+check('a past-due organization cannot publish anything new', pastDue.can_publish === false);
+
+// An expired LOCAL trial still reads `trialing` — Stripe never moved it, because Stripe was never
+// involved. `can_publish` is the entitlement gate's own answer and the only field a client may
+// trust for "can this organization do the thing".
+const lapsed = await backend.billingStatus(2);
+check('an expired trial still reports status trialing', lapsed.status === 'trialing');
+check('but reports that it cannot publish', lapsed.can_publish === false);
+check('and names why', lapsed.blocked_reason === 'trial_expired');
+check('an active plan reports that it can publish',
+  (await backend.billingStatus(1)).can_publish === true);
 
 // ---- Result -----------------------------------------------------------------
 
