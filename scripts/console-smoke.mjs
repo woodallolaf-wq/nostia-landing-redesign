@@ -105,7 +105,7 @@ check('unlimited is null, not zero',
   billing.entitlements.adventures === null || billing.entitlements.adventures > 0);
 
 await expectError('checkout for an unpriced tier', 'not-purchasable',
-  () => backend.startCheckout(1, 'standard'));
+  () => backend.startCheckout(1, 'orientation'));
 await expectError('billing portal with Stripe unconfigured', 'unavailable',
   () => backend.billingPortal(1));
 await expectError('CSV export below the institutional tier', 'entitlement',
@@ -173,10 +173,10 @@ check('but none of them arrive pre-approved',
 // The tier is the commercial gate, and it must read as billing (402 → route to
 // the plan screen), never as a permission error.
 await expectError('adding a stop beyond the tier limit', 'entitlement', async () => {
-  // Org 1 is Standard: 15 stops per adventure. Adventure 2 is the draft.
+  // Org 1 is Orientation: 12 stops per adventure. Adventure 2 is the draft.
   for (let i = 0; i < 20; i += 1) await backend.addStep(1, 2, { title: `Stop ${i}` });
 });
-// Org 2 is on Trial: one published adventure, and it already has one.
+// Org 2 is on Pilot: one published adventure, and it already has one.
 await expectError('creating an adventure beyond the tier limit', 'entitlement',
   () => backend.createAdventure(2, { title: 'A second walk' }));
 // A published adventure is immutable regardless of tier, and that check comes
