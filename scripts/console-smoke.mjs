@@ -85,7 +85,7 @@ check('a stop with heavy verification failure exists to exercise the authoring-p
 
 // ---- Analytics below the threshold (org 2) ----------------------------------
 
-const thin = await backend.adventureAnalytics(2, 3);
+const thin = await backend.adventureAnalytics(2, 5);
 check('starts suppresses below threshold', isSuppressed(thin.metrics.starts));
 check('suppression marker names the threshold', thin.metrics.starts.threshold === 5);
 check('suppression is never the number zero', thin.metrics.starts !== 0);
@@ -105,20 +105,46 @@ check('unlimited is null, not zero',
   billing.entitlements.adventures === null || billing.entitlements.adventures > 0);
 
 await expectError('checkout for an unpriced tier', 'not-purchasable',
-  () => backend.startCheckout(1, 'orientation'));
+  () => backend.startCheckout(1, 'campus'));
 await expectError('billing portal with Stripe unconfigured', 'unavailable',
   () => backend.billingPortal(1));
-await expectError('CSV export below the institutional tier', 'entitlement',
-  () => backend.exportAnalyticsCSV(1, 1));
+// Org 2 is on Pilot, which does not include CSV export. Org 1 is Campus, which does —
+// so the gate is tested from both sides rather than only from the refusing one.
+await expectError('CSV export below the Campus tier', 'entitlement',
+  () => backend.exportAnalyticsCSV(2, 5));
 await expectError('analytics for an adventure in another organization', 'not-found',
-  () => backend.adventureAnalytics(1, 3));
+  () => backend.adventureAnalytics(1, 5));
+
+// ---- The synthetic-data disclosure ------------------------------------------
+// Every figure this backend returns is invented, and the real server says the same
+// thing about any run flagged `is_seed`. Both must announce it in the same shape,
+// because the console renders one banner from it and a demo screenshot that loses
+// the caveat is the failure this whole mechanism exists to prevent.
+
+check('analytics carry the synthetic disclosure', rich.synthetic?.contains_seeded_data === true);
+check('the disclosure explains itself in words, not just a flag',
+  typeof rich.synthetic.warning === 'string' && rich.synthetic.warning.length > 20);
+check('the disclosure says it is not traction', /not traction/i.test(rich.synthetic.warning));
+check('the org roll-up carries it too',
+  (await backend.orgAnalytics(1)).every((a) => a.synthetic?.contains_seeded_data === true));
+check('suppressed organizations still disclose',
+  thin.synthetic?.contains_seeded_data === true);
+
+const csv = await backend.exportAnalyticsCSV(1, 1);
+check('CSV export is allowed on Campus', csv.blob instanceof Blob);
+check('and its filename marks it synthetic', csv.filename.startsWith('SEEDED-'));
+const csvText = await csv.blob.text();
+const csvLines = csvText.trim().split('\n');
+check('the CSV carries a synthetic footer row', /SYNTHETIC DEMO DATA/i.test(csvLines.at(-1)));
+check('the footer is padded to the header width, so the CSV stays parseable',
+  csvLines.at(-1).split(',').length === csvLines[0].split(',').length);
 
 // ---- Authoring --------------------------------------------------------------
 // The rules below are the SERVER's, reproduced in the mock so the editor's real
 // screens — "why can't I publish this", "why did my approval disappear" — are
 // exercised without a backend.
 
-const draft = await backend.loadAdventure(1, 2);
+const draft = await backend.loadAdventure(1, 4);
 check('an adventure loads with its stops', Array.isArray(draft.steps) && draft.steps.length > 0);
 check('preflight failures ship with the read, not a second call',
   Array.isArray(draft.preflightFailures));
@@ -129,31 +155,31 @@ check('a missing coordinate is reported',
   draft.preflightFailures.some((f) => f.code === 'missing_coordinate'));
 
 await expectError('publishing an adventure that fails preflight', 'conflict',
-  () => backend.publishAdventure(1, 2));
+  () => backend.publishAdventure(1, 4));
 
 // §12: EVERY edit clears approval, including one that changes nothing. A
 // conditional that preserved approval on a no-op edit is exactly the code path
 // the rule forbids, because "approved" has to mean a human saw THIS version.
 const approvedStep = draft.steps.find((s) => s.approved_at);
-const reEdited = await backend.updateStep(1, 2, approvedStep.id, {});
+const reEdited = await backend.updateStep(1, 4, approvedStep.id, {});
 check('a no-op edit still clears approval', reEdited.approved_at === null);
 
-const step = await backend.addStep(1, 2, { title: 'New stop', text: 'Stand here.' });
+const step = await backend.addStep(1, 4, { title: 'New stop', text: 'Stand here.' });
 check('a new stop starts unapproved', step.approved_at === null);
 check('a new stop starts without a reference photo', step.has_reference === false);
 check('stops are ordered as they are added', step.order === 3);
 
-await backend.updateStep(1, 2, step.id, { lat: 42.98, lng: -70.94 });
-const uploaded = await backend.uploadStepReference(1, 2, step.id, null);
+await backend.updateStep(1, 4, step.id, { lat: 42.98, lng: -70.94 });
+const uploaded = await backend.uploadStepReference(1, 4, step.id, null);
 check('uploading a reference confirms it exists', uploaded.has_reference === true);
 check('and never returns the image or a URL to it',
   !JSON.stringify(uploaded).match(/storage_key|url|http/i));
 
-const approved = await backend.approveStep(1, 2, step.id);
+const approved = await backend.approveStep(1, 4, step.id);
 check('approving a stop records it', Boolean(approved.step.approved_at));
 
-check('deleting a stop renumbers the rest', await backend.deleteStep(1, 2, step.id) === true);
-const afterDelete = await backend.loadAdventure(1, 2);
+check('deleting a stop renumbers the rest', await backend.deleteStep(1, 4, step.id) === true);
+const afterDelete = await backend.loadAdventure(1, 4);
 check('orders stay contiguous after a delete',
   afterDelete.steps.every((s, i) => s.order === i + 1));
 
@@ -172,17 +198,27 @@ check('but none of them arrive pre-approved',
 
 // The tier is the commercial gate, and it must read as billing (402 → route to
 // the plan screen), never as a permission error.
+// Org 1 is Campus, where stops and adventures are BOTH unlimited — so the limit has
+// to be exercised somewhere it actually binds. Org 3 is on Pilot with no adventures
+// yet: it can create one, and then the 5-stop cap bites.
+const capped = await backend.createAdventure(3, { title: 'Hall tour' });
 await expectError('adding a stop beyond the tier limit', 'entitlement', async () => {
-  // Org 1 is Orientation: 12 stops per adventure. Adventure 2 is the draft.
-  for (let i = 0; i < 20; i += 1) await backend.addStep(1, 2, { title: `Stop ${i}` });
+  for (let i = 0; i < 20; i += 1) await backend.addStep(3, capped.id, { title: `Stop ${i}` });
 });
+// The other half of the same gate: on Campus, neither cap exists, and "unlimited"
+// must mean unlimited rather than a large number nobody has reached yet.
+const unlimited = await backend.createAdventure(1, { title: 'Long route' });
+for (let i = 0; i < 14; i += 1) await backend.addStep(1, unlimited.id, { title: `Stop ${i}` });
+check('Campus imposes no stop cap',
+  (await backend.loadAdventure(1, unlimited.id)).steps.length === 14);
+
 // Org 2 is on Pilot: one published adventure, and it already has one.
 await expectError('creating an adventure beyond the tier limit', 'entitlement',
   () => backend.createAdventure(2, { title: 'A second walk' }));
 // A published adventure is immutable regardless of tier, and that check comes
 // first — otherwise the answer to "can I edit this?" would depend on billing.
 await expectError('adding a stop to a published adventure', 'conflict',
-  () => backend.addStep(2, 3, { title: 'Late addition' }));
+  () => backend.addStep(2, 5, { title: 'Late addition' }));
 
 // ---- Past-due semantics -----------------------------------------------------
 
