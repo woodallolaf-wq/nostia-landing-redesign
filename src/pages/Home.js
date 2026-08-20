@@ -364,7 +364,7 @@ export default function Home() {
               </span>
 
               <h2 className="text-2xl sm:text-4xl font-bold mb-4">
-                Put your city on{" "}
+                Put your campus on{" "}
                 <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
                   Nostia Orgs
                 </span>
@@ -372,10 +372,10 @@ export default function Home() {
               </h2>
 
               <p className="text-white/60 mb-8 max-w-lg">
-                Museums, campuses, tourism boards and downtown districts build a
-                place-anchored walking adventure, publish it into the Nostia app,
-                hand it out as a printed QR code, and see exactly where people
-                walked — and where they stopped.
+                Colleges and universities walk an incoming class through a
+                geofenced, photo-verified route during Welcome Week, hand it out
+                as a printed QR code, and see exactly where the class walked —
+                and where it stopped.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
@@ -399,9 +399,9 @@ export default function Home() {
 
             <ul className="space-y-4">
               {[
-                { icon: MapPin, text: "Author a multi-stop route, anchored to real places" },
-                { icon: Check, text: "Verified arrivals — geofence dwell plus photo, not an honour system" },
-                { icon: BarChart3, text: "Per-stop analytics showing exactly where walkers dropped off" },
+                { icon: Check, text: "Verified arrivals — geofence dwell plus photo, not a sign-in sheet" },
+                { icon: BarChart3, text: "Per-stop analytics showing exactly where the class dropped off" },
+                { icon: MapPin, text: "Authored by staff or peer mentors, standing at the stop" },
               ].map(({ icon: Icon, text }) => (
                 <li key={text} className="flex gap-3 items-start">
                   <span className="mt-0.5 w-8 h-8 shrink-0 rounded-lg bg-emerald-400/15 border border-emerald-400/25 flex items-center justify-center">
