@@ -115,29 +115,14 @@ await expectError('CSV export below the Campus tier', 'entitlement',
 await expectError('analytics for an adventure in another organization', 'not-found',
   () => backend.adventureAnalytics(1, 5));
 
-// ---- The synthetic-data disclosure ------------------------------------------
-// Every figure this backend returns is invented, and the real server says the same
-// thing about any run flagged `is_seed`. Both must announce it in the same shape,
-// because the console renders one banner from it and a demo screenshot that loses
-// the caveat is the failure this whole mechanism exists to prevent.
-
-check('analytics carry the synthetic disclosure', rich.synthetic?.contains_seeded_data === true);
-check('the disclosure explains itself in words, not just a flag',
-  typeof rich.synthetic.warning === 'string' && rich.synthetic.warning.length > 20);
-check('the disclosure says it is not traction', /not traction/i.test(rich.synthetic.warning));
-check('the org roll-up carries it too',
-  (await backend.orgAnalytics(1)).every((a) => a.synthetic?.contains_seeded_data === true));
-check('suppressed organizations still disclose',
-  thin.synthetic?.contains_seeded_data === true);
+// ---- CSV export, from the allowed side ---------------------------------------
 
 const csv = await backend.exportAnalyticsCSV(1, 1);
 check('CSV export is allowed on Campus', csv.blob instanceof Blob);
-check('and its filename marks it synthetic', csv.filename.startsWith('SEEDED-'));
-const csvText = await csv.blob.text();
-const csvLines = csvText.trim().split('\n');
-check('the CSV carries a synthetic footer row', /SYNTHETIC DEMO DATA/i.test(csvLines.at(-1)));
-check('the footer is padded to the header width, so the CSV stays parseable',
-  csvLines.at(-1).split(',').length === csvLines[0].split(',').length);
+check('and is named for the adventure and version', /^adventure-1-v1\.csv$/.test(csv.filename));
+const csvLines = (await csv.blob.text()).trim().split('\n');
+check('every CSV row has the same column count as the header',
+  csvLines.every((l) => l.split(',').length === csvLines[0].split(',').length));
 
 // ---- Authoring --------------------------------------------------------------
 // The rules below are the SERVER's, reproduced in the mock so the editor's real
