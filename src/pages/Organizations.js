@@ -37,29 +37,29 @@ const viewport = { once: true, margin: "-80px" };
 
 const capabilities = [
   {
-    icon: MapPin,
-    title: "Authoring",
-    text: "Build a multi-stop route anchored to real places — per-stop text, a verification criterion, a reference photo, and a geofence. Authored on mobile, standing at the stop you are anchoring.",
-  },
-  {
     icon: ShieldCheck,
     title: "Verification",
-    text: "A geofence dwell plus photo judging proves someone was physically at the stop. Attendance you can defend to a funder, rather than a tap that says they were there.",
+    text: "A geofence dwell plus photo judging proves a student was physically at the stop. Attendance a dean can defend, rather than a sign-in sheet nobody audits.",
   },
   {
     icon: BarChart3,
     title: "Analytics",
-    text: "Six metrics and a per-stop funnel, scoped to the version people actually walked. Small groups are suppressed so a figure can never identify a person.",
+    text: "Per-stop drop-off across a whole incoming class, scoped to the version people actually walked. Small groups are suppressed, so a figure can never identify a student.",
+  },
+  {
+    icon: MapPin,
+    title: "Authoring",
+    text: "Any staff member or peer mentor builds a route without engineering help — per-stop text, a verification criterion, a reference photo, and a geofence. Authored on mobile, standing at the stop you are anchoring.",
   },
   {
     icon: QrCode,
     title: "Distribution",
-    text: "Invite codes and printable QR that survive an App Store install — the code is still there after someone downloads the app, so a poster works on a stranger.",
+    text: "Printed QR on a residence-hall door, and invite codes scoped to a single club. The code survives an App Store install, so a poster works on a first-year who has never heard of Nostia.",
   },
   {
     icon: Palette,
     title: "Branding",
-    text: "Your accent colour and logo on the adventure, so a sponsored walk reads as yours.",
+    text: "Departmental identity inside one institutional account, so Residence Life and the Rec Centre can each look like themselves.",
   },
 ];
 
@@ -73,9 +73,9 @@ const metrics = [
 ];
 
 const steps = [
-  { n: "01", title: "Author the route", text: "Walk it once on mobile, anchoring each stop where it belongs." },
-  { n: "02", title: "Publish and print", text: "Publish into the Nostia app and print the QR for your posters, desks and trailheads." },
-  { n: "03", title: "Read the funnel", text: "Watch where people walked and where they dropped off, stop by stop." },
+  { n: "01", title: "Author the route", text: "Walk it once on mobile during staff training, anchoring each stop where it belongs." },
+  { n: "02", title: "Publish and print", text: "Publish into the Nostia app and print the QR for residence-hall doors, orientation packets and tabling." },
+  { n: "03", title: "Read the funnel", text: "Watch where the class walked and where it dropped off, stop by stop, while Welcome Week is still running." },
 ];
 
 function SignInButton({ className = "" }) {
@@ -121,9 +121,10 @@ export default function Organizations() {
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-base sm:text-xl text-white/70 max-w-2xl mx-auto mb-10">
-            A subscription for museums, campuses, tourism boards and downtown
-            districts. Author a walking adventure, publish it to the Nostia app,
-            distribute it on paper, and find out what actually happened.
+            A subscription for colleges and universities. Walk an incoming class
+            through a geofenced, photo-verified route during Welcome Week — then
+            keep using it for residence life, involvement fairs and everything
+            else your students are supposed to turn up to.
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 justify-center">
