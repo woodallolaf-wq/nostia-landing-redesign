@@ -45,6 +45,9 @@ const contractMethods = [
   'signIn', 'loadMe', 'signOut', 'orgAnalytics', 'listAdventures', 'adventureAnalytics',
   'exportAnalyticsCSV', 'billingStatus', 'startCheckout', 'billingPortal', 'listInviteCodes',
   'setCredentials',
+  // The printable QR. routes.inviteQR existed from the start and nothing ever
+  // called it, so the one asset meant to go on paper was unreachable here.
+  'inviteQrSvg',
   // Authoring. The mock implements all of these for real, not as stubs — a page
   // that works on one backend and not the other means the seam is decorative.
   'loadAdventure', 'createAdventure', 'updateAdventure', 'addStep', 'updateStep', 'deleteStep',
@@ -123,6 +126,14 @@ check('and is named for the adventure and version', /^adventure-1-v1\.csv$/.test
 const csvLines = (await csv.blob.text()).trim().split('\n');
 check('every CSV row has the same column count as the header',
   csvLines.every((l) => l.split(',').length === csvLines[0].split(',').length));
+
+// ---- The printable QR --------------------------------------------------------
+
+const qr = await backend.inviteQrSvg(1, 41);
+check('invite QR returns SVG source', typeof qr === 'string' && qr.trim().startsWith('<svg'));
+check('invite QR is self-contained, so it prints without a network', !/<image|xlink:href/.test(qr));
+await expectError('QR for a code that does not exist', 'not-found',
+  () => backend.inviteQrSvg(1, 999999));
 
 // ---- Authoring --------------------------------------------------------------
 // The rules below are the SERVER's, reproduced in the mock so the editor's real
