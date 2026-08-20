@@ -25,9 +25,10 @@ Pages serve a private repo directly and this whole arrangement goes away.
 
 **1. Create the public repo**
 
-Create `olafw666-cpu/nostia-site` — public, empty, no README (the first deploy
-writes the tree). To use a different name, change `PUBLIC_REPO` at the top of
-`.github/workflows/deploy.yml`.
+Create `olafw666-cpu/nostia-page-landing` — public, empty, no README (the first deploy
+writes the tree). To use a different name, change the clone URL in the `publish`
+step of `.github/workflows/deploy.yml` — the repository is written inline there,
+not lifted into a variable.
 
 **2. Create a token scoped to that repo only**
 
@@ -36,7 +37,7 @@ GitHub → Settings → Developer settings → **Fine-grained personal access to
 | Field | Value |
 |---|---|
 | Resource owner | `olafw666-cpu` |
-| Repository access | **Only select repositories** → `nostia-site` |
+| Repository access | **Only select repositories** → `nostia-page-landing` |
 | Permissions | **Contents: Read and write** |
 | Expiration | Set a real one and calendar the rotation |
 
@@ -53,7 +54,7 @@ This repo → Settings → Secrets and variables → Actions → New repository 
 
 **4. Point Pages at the public repo**
 
-On `nostia-site` → Settings → Pages:
+On `nostia-page-landing` → Settings → Pages:
 
 - Source: **Deploy from a branch**
 - Branch: `main`, folder `/ (root)`
@@ -93,8 +94,8 @@ missing from the build:
 The public repo keeps one commit per deploy, so a bad publish is:
 
 ```bash
-git clone https://github.com/olafw666-cpu/nostia-site
-cd nostia-site
+git clone https://github.com/olafw666-cpu/nostia-page-landing
+cd nostia-page-landing
 git revert HEAD && git push
 ```
 
