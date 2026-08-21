@@ -260,6 +260,11 @@ check('the file picker keeps its drop-zone treatment',
   hasSelector('input[type="file"] {'));
 check('an input sharing a row with a button is told how to flex',
   hasSelector('.row > input,'));
+check('the page declares color-scheme, so native popups follow the theme',
+  css.includes('color-scheme: light dark'));
+check('options paint their own background, not just their colour',
+  hasSelector('option {') && /option {[^}]*background-color/.test(css));
+
 check('number inputs drop their spinners, so a geofence cannot be nudged by mis-click',
   hasSelector('input[type="number"] {'));
 
