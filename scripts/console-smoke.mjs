@@ -13,6 +13,7 @@
  */
 import { MockBackend } from '../public/console/src/api/mock.js';
 import { RestBackend } from '../public/console/src/api/rest.js';
+import { readFileSync } from 'node:fs';
 
 let passed = 0;
 const failures = [];
@@ -234,6 +235,34 @@ check('but reports that it cannot publish', lapsed.can_publish === false);
 check('and names why', lapsed.blocked_reason === 'trial_expired');
 check('an active plan reports that it can publish',
   (await backend.billingStatus(1)).can_publish === true);
+
+// ---- Every control is styled -------------------------------------------------
+// These rules were once scoped under .field, which meant a control only looked
+// designed if someone remembered to wrap it — and two did not. The "New adventure
+// title" and "Stop title" boxes sit inline beside their buttons rather than in a
+// labelled field, so both rendered as raw OS widgets on the authoring screen, next
+// to a styled button. Scoping to a wrapper makes correct styling forgettable;
+// these assertions keep it scoped to the element, where the next control added is
+// covered without anyone thinking about it.
+
+const css = readFileSync(new URL('../public/console/styles.css', import.meta.url), 'utf8');
+const hasSelector = (sel) => css.split('\n').some((line) => line.trim().startsWith(sel));
+
+check('text inputs are styled by element, not only inside .field',
+  hasSelector('input:not([type="file"]),'));
+check('selects are styled by element', hasSelector('select,'));
+check('textareas are styled by element', hasSelector('textarea {'));
+check('no control rule is scoped under .field any more',
+  !/\.field\s+(input|select|textarea)[\s,:{[]/.test(css));
+check('the org switcher keeps its own borderless treatment',
+  hasSelector('.org-switch select {'));
+check('the file picker keeps its drop-zone treatment',
+  hasSelector('input[type="file"] {'));
+check('an input sharing a row with a button is told how to flex',
+  hasSelector('.row > input,'));
+check('number inputs drop their spinners, so a geofence cannot be nudged by mis-click',
+  hasSelector('input[type="number"] {'));
+
 
 // ---- Result -----------------------------------------------------------------
 
