@@ -4,6 +4,7 @@ import {
   Accessibility,
   Apple,
   BadgeCheck,
+  BatteryCharging,
   BookOpen,
   CircuitBoard,
   CreditCard,
@@ -17,6 +18,7 @@ import {
   Linkedin,
   Plane,
   Radio,
+  ScrollText,
   Server,
   ShieldCheck,
   Smartphone,
@@ -70,13 +72,13 @@ const heroLinks = [
 const nostiaWork = [
   {
     icon: Smartphone,
-    title: "Full stack, built solo",
-    text: "Native SwiftUI iOS app, Node.js/Express backend, SQLite persistence, and PM2/Nginx deployment on DigitalOcean with automated daily backups and process supervision.",
+    title: "Full stack, owned end-to-end",
+    text: "React Native and Expo on the front end; Node.js and Express on the back with SQLite persistence. I moved the whole backend off a managed platform onto a self-managed Linux server — Nginx, PM2, TLS, automated daily backups — after its ephemeral containers kept wiping the database on every deploy.",
   },
   {
     icon: CreditCard,
     title: "Payments end-to-end",
-    text: "Stripe Connect v2 with direct charges and Apple Pay via StripePaymentSheet — including a full migration to Connect v2's new account model.",
+    text: "Stripe Connect v2 with direct charges and Apple Pay through Stripe's PaymentSheet — including a full migration to Connect v2's new account model.",
   },
   {
     icon: Server,
@@ -123,13 +125,24 @@ const hardwareProjects = [
       "Built to a ~$800–900 bill of materials against a $2,000 budget.",
     ],
   },
+  {
+    icon: BatteryCharging,
+    status: "in-progress",
+    title: "Formula SAE — accumulator subsystem",
+    points: [
+      "I lead the accumulator subsystem on the Mines Formula SAE team: the high-voltage battery pack for the car.",
+      "The part of the car where the tolerance for error is lowest.",
+    ],
+  },
 ];
 
 const otherSoftware = [
   {
     icon: Globe,
     title: "Smarter Than A Crow",
-    text: "A zero-backend quiz web app: static site on GitHub Pages, localStorage state, content swappable through a single questions.json, custom domain configured through DNS.",
+    href: "https://smarterthanacrow.app",
+    linkLabel: "smarterthanacrow.app",
+    text: "A static quiz web app with a hidden ballistic-arc calculator buried inside it — RK4 drag model, device-motion pitch input, tap-gated entry. Zero backend: GitHub Pages, localStorage state, content swappable through a single questions.json. Built because the joke was worth the physics.",
   },
   {
     icon: Sparkles,
@@ -140,45 +153,65 @@ const otherSoftware = [
 
 const writing = [
   {
+    icon: BookOpen,
+    title: "Moral judgment in history",
+    status: "in-progress",
+    text: "A nonfiction book examining moral judgment through historical figures — Oliver Cromwell among them — with Ottoman history running alongside it.",
+  },
+  {
+    icon: ScrollText,
+    title: "Essays",
+    text: "Long-form essays on history, media representation, and geopolitics: the Crusades, labor systems in the Gulf, and U.S. arms policy.",
+  },
+  {
     icon: Feather,
     title: "Fantasy novel",
     status: "in-progress",
     text: "A novel in third-person limited with an isekai structure.",
   },
   {
-    icon: BookOpen,
-    title: "Religion & philosophy",
-    status: "in-progress",
-    text: "A nonfiction book arguing religion and philosophy are congruent disciplines, using Oliver Cromwell as a central case study and treating theology as subject to philosophical scrutiny.",
-  },
-  {
     icon: Landmark,
-    title: "Investment research",
-    text: "Independent research across precious metals, defense/aerospace, and quantum computing — including small-cap screening in post-quantum cryptography adjacency.",
+    title: "Markets & investment research",
+    text: "Independent research across precious metals, defense and aerospace, quantum computing, robotics, and rare-earth supply chains — including small-cap screening in post-quantum cryptography adjacency.",
   },
   {
     icon: Globe,
-    title: "Broader interests",
-    text: "Philosophy of language and semantics, biblical criticism, Norse religion, geopolitics, and the history of drone warfare.",
+    title: "Philosophy & history",
+    text: "Ottoman history, early modern England, and the moral logic of people who thought they were right — plus structural mechanics and thermodynamics, which I like more than I'm supposed to admit.",
   },
 ];
 
 const skills = [
-  { area: "iOS", items: "Swift, SwiftUI, App Store operations, APNs, App Clips" },
+  { area: "Mobile", items: "React Native, Expo, App Store release process, APNs, App Clips" },
   { area: "Backend", items: "Node.js, Express, SQLite (better-sqlite3), REST API design" },
-  { area: "Infrastructure", items: "Linux, Nginx, PM2, systemd, DigitalOcean, DNS, backup automation" },
+  { area: "Infrastructure", items: "Linux server administration, Nginx, PM2, systemd, DigitalOcean, DNS, TLS, backup automation" },
   { area: "Payments", items: "Stripe Connect v2, direct charges, Apple Pay integration" },
   { area: "ML", items: "LoRA fine-tuning, local model deployment, inference serving" },
-  { area: "Embedded", items: "ESP32-C3, ESP-NOW, MOSFET power switching, drone power systems" },
-  { area: "Engineering tools", items: "EES, Python (ReportLab, data analysis), Git/GitHub" },
+  { area: "Embedded", items: "ESP32-C3, ESP-NOW, MOSFET power switching, EV accumulator systems, drone power systems" },
+  { area: "Engineering", items: "Structural mechanics, thermodynamics (Rankine cycle), engineering economics (MACRS, ATCF, NPV/ROR)" },
+  { area: "Tools", items: "EES, Python (ReportLab, data analysis), Git/GitHub" },
+  { area: "Credentials", items: "FAA Part 107 Remote Pilot" },
 ];
 
 export default function OlafWoodall() {
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = "Olaf Woodall — Founder & CEO, Nostia";
+    const meta = document.querySelector('meta[name="description"]');
+    const previousDescription = meta ? meta.getAttribute("content") : null;
+
+    document.title = "Olaf Woodall — Engineer, Founder, Writer";
+    if (meta) {
+      meta.setAttribute(
+        "content",
+        "Mechanical engineering student at the Colorado School of Mines and co-founder of Nostia. I build software, hardware, and companies, and write about history and philosophy."
+      );
+    }
+
     return () => {
       document.title = previousTitle;
+      if (meta && previousDescription !== null) {
+        meta.setAttribute("content", previousDescription);
+      }
     };
   }, []);
 
@@ -196,12 +229,17 @@ export default function OlafWoodall() {
           className="relative grid gap-10 md:grid-cols-[1.2fr_1fr] items-center"
         >
           <div className="text-center md:text-left order-2 md:order-1">
-            <motion.span
+            <motion.div
               variants={fadeUp}
-              className="inline-flex items-center gap-2 border border-white/15 bg-white/5 rounded-full px-4 py-1.5 text-xs sm:text-sm text-white/70 mb-6"
+              className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-6"
             >
-              Founder & CEO, Nostia LLC
-            </motion.span>
+              <span className="inline-flex items-center gap-2 border border-white/15 bg-white/5 rounded-full px-4 py-1.5 text-xs sm:text-sm text-white/70">
+                Co-Founder & CEO, Nostia LLC
+              </span>
+              <span className="inline-flex items-center gap-2 border border-white/15 bg-white/5 rounded-full px-4 py-1.5 text-xs sm:text-sm text-white/70">
+                Golden, Colorado
+              </span>
+            </motion.div>
 
             <motion.h1
               variants={fadeUp}
@@ -214,16 +252,24 @@ export default function OlafWoodall() {
             </motion.h1>
 
             <motion.p variants={fadeUp} className="text-base sm:text-lg text-white/70 max-w-xl mx-auto md:mx-0 mb-4">
-              Mechanical engineering student at the Colorado School of Mines and founder of Nostia,
-              a group-travel app live on the iOS App Store.
+              Mechanical engineering student at the Colorado School of Mines and co-founder of
+              Nostia, a place-based experiences app live on the iOS App Store. I build across
+              software, hardware, and history.
+            </motion.p>
+
+            <motion.p variants={fadeUp} className="text-sm sm:text-base text-white/50 max-w-xl mx-auto md:mx-0 mb-4">
+              I run Nostia and own most of its technical surface myself — the app, the backend, the
+              payments system, and the servers all of it runs on. I lead the high-voltage
+              accumulator subsystem for Mines Formula SAE, build my own drone hardware on the side,
+              and write on history, philosophy, and geopolitics. My working style is spec-driven:
+              major features and hardware systems get formal engineering specifications before and
+              during implementation.
             </motion.p>
 
             <motion.p variants={fadeUp} className="text-sm sm:text-base text-white/50 max-w-xl mx-auto md:mx-0 mb-8">
-              I work across an unusually wide range: shipping production software end-to-end,
-              building and debugging custom drone hardware, running independent investment
-              research, and maintaining long-form writing projects in fiction and philosophy of
-              history. My working style is spec-driven — major features and hardware systems get
-              formal engineering specifications before and during implementation.
+              I don't think the engineering and the writing are separate activities. Both are
+              attempts to take something complicated and make it hold together under load. I'm just
+              further along in one of them.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap justify-center md:justify-start gap-3">
@@ -268,13 +314,14 @@ export default function OlafWoodall() {
         <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-4">
           Nostia —{" "}
           <span className="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
-            where the group chat becomes a trip.
+            live on the App Store, city by city.
           </span>
         </motion.h2>
         <motion.p variants={fadeUp} className="text-white/60 max-w-2xl mx-auto text-center mb-10 sm:mb-14">
-          Trips planned in group chats rarely happen. Nostia gives friends, families, and groups
-          shared trip calendars, lodging tools, and collaborative fundraising so plans actually
-          convert into travel. Founded as Nostia LLC in New Hampshire; live on the iOS App Store.
+          A place-based experiences app I co-founded and now run as CEO with a five-person team. I
+          own most of the technical surface myself — the app, the backend, the payments system, and
+          the self-managed Linux server all of it runs on. Formed as Nostia LLC in New Hampshire;
+          rolling out city by city on the iOS App Store.
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -324,7 +371,8 @@ export default function OlafWoodall() {
             <h3 className="font-semibold mb-2">The company side</h3>
             <p className="text-white/60 text-sm">
               Formed Nostia LLC in New Hampshire, handled state compliance filings, and co-authored
-              and stress-tested the company charter. Applying to Y Combinator with a cofounder.
+              and stress-tested the company charter. I run the company as CEO with a five-person
+              team.
             </p>
           </motion.div>
         </div>
@@ -358,10 +406,11 @@ export default function OlafWoodall() {
         className="mt-24 sm:mt-36"
       >
         <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-4">
-          Drone & embedded hardware
+          Hardware & embedded systems
         </motion.h2>
         <motion.p variants={fadeUp} className="text-white/60 max-w-2xl mx-auto text-center mb-10 sm:mb-14">
-          Custom flight hardware designed, built, and debugged from the power topology up.
+          Custom flight hardware and a high-voltage EV pack — designed, built, and debugged from
+          the power topology up.
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -405,7 +454,7 @@ export default function OlafWoodall() {
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {otherSoftware.map(({ icon: Icon, title, text }) => (
+          {otherSoftware.map(({ icon: Icon, title, text, href, linkLabel }) => (
             <motion.div
               key={title}
               variants={fadeUp}
@@ -417,6 +466,17 @@ export default function OlafWoodall() {
               </div>
               <h3 className="font-semibold text-lg mb-2">{title}</h3>
               <p className="text-white/60 text-sm sm:text-base">{text}</p>
+              {href && (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm text-sky-300 hover:text-sky-200 transition"
+                >
+                  {linkLabel}
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
             </motion.div>
           ))}
         </div>
@@ -477,7 +537,7 @@ export default function OlafWoodall() {
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-1">
-                B.S. Mechanical Engineering <span className="text-white/40 text-sm font-normal">(in progress)</span>
+                B.S. Mechanical Engineering <span className="text-white/40 text-sm font-normal">(expected Spring 2028)</span>
               </h3>
               <p className="text-white/60 text-sm sm:text-base">
                 Colorado School of Mines, Golden, CO. Coursework includes thermodynamics (Rankine
