@@ -10,14 +10,14 @@ import jhImage from "../joehannon.png";
 const teamMembers = [
   {
     name: "Olaf Woodall",
-    role: "Founder",
+    role: "Co-Founder & CEO",
     image: owImage,
     hasImage: true,
     description: "I am a driven individual driven by a dream of improving humanity via the invention, investment, and improvement of current technology. I have expertise in leadership, ML development, marketing, full stack development. In my free time I like to hike and ski."
   },
   {
     name: "Will Chadwick",
-    role: "Co-Founder",
+    role: "Co-Founder & COO",
     image: wcImage,
     hasImage: true,
     description: "I'm Will. I am a motivated and ambitious person with a lot of goals to create and innovate in the new age of artificial intelligence and the internet. I have experience in leadership and creative thinking along with networking skills that I hope to continue to deploy working with Nostia to create a product that can help shape the future of travel and planning. In my free time I like to ski and go on adventures."
