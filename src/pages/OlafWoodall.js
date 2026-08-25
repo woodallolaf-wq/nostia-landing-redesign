@@ -73,12 +73,12 @@ const nostiaWork = [
   {
     icon: Smartphone,
     title: "Full stack, owned end-to-end",
-    text: "React Native and Expo on the front end; Node.js and Express on the back with SQLite persistence. I moved the whole backend off a managed platform onto a self-managed Linux server — Nginx, PM2, TLS, automated daily backups — after its ephemeral containers kept wiping the database on every deploy.",
+    text: "Native Swift and SwiftUI on the front end; Node.js and Express on the back with SQLite persistence. I moved the whole backend off a managed platform onto a self-managed Linux server — Nginx, PM2, TLS, automated daily backups — after its ephemeral containers kept wiping the database on every deploy.",
   },
   {
     icon: CreditCard,
     title: "Payments end-to-end",
-    text: "Stripe Connect v2 with direct charges and Apple Pay through Stripe's PaymentSheet — including a full migration to Connect v2's new account model.",
+    text: "Stripe Connect v2 with direct charges and Apple Pay via StripePaymentSheet — including a full migration to Connect v2's new account model.",
   },
   {
     icon: Server,
@@ -182,7 +182,7 @@ const writing = [
 ];
 
 const skills = [
-  { area: "Mobile", items: "React Native, Expo, App Store release process, APNs, App Clips" },
+  { area: "iOS", items: "Swift, SwiftUI, App Store release process, APNs, App Clips" },
   { area: "Backend", items: "Node.js, Express, SQLite (better-sqlite3), REST API design" },
   { area: "Infrastructure", items: "Linux server administration, Nginx, PM2, systemd, DigitalOcean, DNS, TLS, backup automation" },
   { area: "Payments", items: "Stripe Connect v2, direct charges, Apple Pay integration" },
