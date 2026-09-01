@@ -134,16 +134,16 @@ export default function OrgTerms() {
   return (
     <main className="w-full max-w-3xl">
       <div className="mb-10">
-        <span className="inline-flex items-center gap-2 border border-emerald-400/30 bg-emerald-400/10 rounded-full px-3 py-1 text-xs text-emerald-300 mb-5">
+        <span className="block text-xs uppercase tracking-[0.18em] text-muted mb-5">
           Nostia Orgs
         </span>
-        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4">
+        <h1 className="font-serif text-3xl sm:text-5xl text-ink tracking-tight mb-4">
           Organization Terms
         </h1>
-        <p className="text-white/50 text-sm">
+        <p className="text-muted text-sm">
           Effective {EFFECTIVE} · These apply to organizations using Nostia Orgs.
           Individual accounts are governed by the{" "}
-          <Link to="/terms" className="text-emerald-300/80 hover:text-emerald-200 underline underline-offset-2">
+          <Link to="/terms" className="text-accent hover:underline underline underline-offset-2">
             Nostia Terms of Service
           </Link>
           .
@@ -153,9 +153,9 @@ export default function OrgTerms() {
       <div className="space-y-10">
         {sections.map(({ title, body }) => (
           <section key={title}>
-            <h2 className="text-lg sm:text-xl font-semibold mb-3">{title}</h2>
+            <h2 className="font-serif text-lg sm:text-xl text-ink mb-3">{title}</h2>
             {body.map((paragraph, i) => (
-              <p key={i} className="text-white/60 text-sm sm:text-base leading-relaxed mb-3">
+              <p key={i} className="text-body text-sm sm:text-base leading-relaxed mb-3">
                 {paragraph}
               </p>
             ))}
@@ -163,7 +163,7 @@ export default function OrgTerms() {
         ))}
       </div>
 
-      <p className="text-white/40 text-sm mt-14 pt-8 border-t border-white/10">
+      <p className="text-muted text-sm mt-14 pt-8 border-t border-rule">
         NOSTIA LLC · Exeter, New Hampshire
       </p>
     </main>

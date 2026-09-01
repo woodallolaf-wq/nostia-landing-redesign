@@ -46,17 +46,17 @@ const viewport = { once: true, margin: "-80px" };
 function StatusBadge({ status }) {
   if (status === "shipped") {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-emerald-400">
+      <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-accent">
         <BadgeCheck className="w-3.5 h-3.5" />
         Shipped
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-sky-400">
+    <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-accent">
       <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-400" />
+        <span className="hidden" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-tint" />
       </span>
       In progress
     </span>
@@ -219,8 +219,6 @@ export default function OlafWoodall() {
     <main className="w-full max-w-6xl">
       {/* ── Hero ── */}
       <section className="relative pt-6 sm:pt-16 pb-16 sm:pb-24">
-        <div className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full bg-indigo-500/20 blur-3xl" />
-        <div className="pointer-events-none absolute -top-10 -right-40 h-[28rem] w-[28rem] rounded-full bg-sky-400/15 blur-3xl" />
 
         <motion.div
           variants={stagger}
@@ -233,31 +231,31 @@ export default function OlafWoodall() {
               variants={fadeUp}
               className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-6"
             >
-              <span className="inline-flex items-center gap-2 border border-white/15 bg-white/5 rounded-full px-4 py-1.5 text-xs sm:text-sm text-white/70">
+              <span className="inline-flex items-center gap-2 border border-rule bg-tint rounded-full px-4 py-1.5 text-xs sm:text-sm text-body">
                 Co-Founder & CEO, Nostia LLC
               </span>
-              <span className="inline-flex items-center gap-2 border border-white/15 bg-white/5 rounded-full px-4 py-1.5 text-xs sm:text-sm text-white/70">
+              <span className="inline-flex items-center gap-2 border border-rule bg-tint rounded-full px-4 py-1.5 text-xs sm:text-sm text-body">
                 Golden, Colorado
               </span>
             </motion.div>
 
             <motion.h1
               variants={fadeUp}
-              className="text-4xl sm:text-6xl font-bold tracking-tight leading-[1.05] mb-5"
+              className="font-serif text-4xl sm:text-5xl font-bold tracking-tight leading-[1.05] mb-5"
             >
               Olaf{" "}
-              <span className="bg-gradient-to-r from-sky-400 via-indigo-400 to-fuchsia-400 bg-clip-text text-transparent">
+              <span className="text-ink">
                 Woodall
               </span>
             </motion.h1>
 
-            <motion.p variants={fadeUp} className="text-base sm:text-lg text-white/70 max-w-xl mx-auto md:mx-0 mb-4">
+            <motion.p variants={fadeUp} className="text-base sm:text-lg text-body max-w-xl mx-auto md:mx-0 mb-4">
               Mechanical engineering student at the Colorado School of Mines and co-founder of
               Nostia, a place-based experiences app live on the iOS App Store. I build across
               software, hardware, and history.
             </motion.p>
 
-            <motion.p variants={fadeUp} className="text-sm sm:text-base text-white/50 max-w-xl mx-auto md:mx-0 mb-4">
+            <motion.p variants={fadeUp} className="text-sm sm:text-base text-muted max-w-xl mx-auto md:mx-0 mb-4">
               I run Nostia and own most of its technical surface myself — the app, the backend, the
               payments system, and the servers all of it runs on. I lead the high-voltage
               accumulator subsystem for Mines Formula SAE, build my own drone hardware on the side,
@@ -266,7 +264,7 @@ export default function OlafWoodall() {
               during implementation.
             </motion.p>
 
-            <motion.p variants={fadeUp} className="text-sm sm:text-base text-white/50 max-w-xl mx-auto md:mx-0 mb-8">
+            <motion.p variants={fadeUp} className="text-sm sm:text-base text-muted max-w-xl mx-auto md:mx-0 mb-8">
               I don't think the engineering and the writing are separate activities. Both are
               attempts to take something complicated and make it hold together under load. I'm just
               further along in one of them.
@@ -281,7 +279,7 @@ export default function OlafWoodall() {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-4 py-2 rounded-full text-sm hover:bg-white/10 hover:border-white/40 transition"
+                  className="inline-flex items-center gap-2 border border-rule bg-tint px-4 py-2 rounded-full text-sm hover:bg-tint hover:border-ink transition"
                 >
                   <Icon className="w-4 h-4" />
                   {label}
@@ -292,11 +290,10 @@ export default function OlafWoodall() {
 
           <motion.div variants={fadeUp} className="order-1 md:order-2 flex justify-center">
             <div className="relative w-64 sm:w-80 md:w-full max-w-sm">
-              <div className="pointer-events-none absolute -inset-4 rounded-3xl bg-gradient-to-br from-sky-400/20 via-indigo-500/10 to-fuchsia-400/20 blur-2xl" />
               <img
                 src={portrait}
                 alt="Olaf Woodall"
-                className="relative w-full rounded-3xl border border-white/15 object-cover shadow-2xl shadow-black/50"
+                className="relative w-full rounded-3xl border border-rule object-cover shadow-2xl shadow-black/50"
               />
             </div>
           </motion.div>
@@ -311,13 +308,13 @@ export default function OlafWoodall() {
         viewport={viewport}
         className="mt-8 sm:mt-16"
       >
-        <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-4">
+        <motion.h2 variants={fadeUp} className="font-serif text-2xl sm:text-3xl text-center mb-4">
           Nostia —{" "}
-          <span className="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
+          <span className="text-ink">
             live on the App Store, city by city.
           </span>
         </motion.h2>
-        <motion.p variants={fadeUp} className="text-white/60 max-w-2xl mx-auto text-center mb-10 sm:mb-14">
+        <motion.p variants={fadeUp} className="text-body max-w-2xl mx-auto text-center mb-10 sm:mb-14">
           A place-based experiences app I co-founded and now run as CEO with a five-person team. I
           own most of the technical surface myself — the app, the backend, the payments system, and
           the self-managed Linux server all of it runs on. Formed as Nostia LLC in New Hampshire;
@@ -330,13 +327,13 @@ export default function OlafWoodall() {
               key={title}
               variants={fadeUp}
               whileHover={{ y: -6 }}
-              className="border border-white/10 bg-white/5 rounded-2xl p-6 hover:border-white/25 transition-colors"
+              className="border border-rule bg-tint rounded-2xl p-6 hover:border-ink transition-colors"
             >
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400/20 to-indigo-500/20 border border-white/10 flex items-center justify-center mb-5">
-                <Icon className="w-5 h-5 text-sky-300" />
+              <div className="w-11 h-11 rounded-xl bg-tint border border-rule flex items-center justify-center mb-5">
+                <Icon className="w-5 h-5 text-accent" />
               </div>
               <h3 className="font-semibold mb-2">{title}</h3>
-              <p className="text-white/60 text-sm">{text}</p>
+              <p className="text-body text-sm">{text}</p>
             </motion.div>
           ))}
         </div>
@@ -345,16 +342,16 @@ export default function OlafWoodall() {
           <motion.div
             variants={fadeUp}
             whileHover={{ y: -6 }}
-            className="border border-sky-400/40 bg-sky-400/5 rounded-2xl p-6 transition-colors"
+            className="border border-ink bg-tint rounded-2xl p-6 transition-colors"
           >
             <div className="flex items-center justify-between mb-5">
-              <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-sky-300" />
+              <div className="w-11 h-11 rounded-xl bg-tint flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-accent" />
               </div>
               <StatusBadge status="in-progress" />
             </div>
             <h3 className="font-semibold mb-2">Adventure Page</h3>
-            <p className="text-white/60 text-sm">
+            <p className="text-body text-sm">
               An AI-driven discovery feature powered by a locally fine-tuned DeepSeek 1.5B model
               (LoRA), served from dedicated inference infrastructure.
             </p>
@@ -363,13 +360,13 @@ export default function OlafWoodall() {
           <motion.div
             variants={fadeUp}
             whileHover={{ y: -6 }}
-            className="border border-white/10 bg-white/5 rounded-2xl p-6 hover:border-white/25 transition-colors"
+            className="border border-rule bg-tint rounded-2xl p-6 hover:border-ink transition-colors"
           >
-            <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center mb-5">
-              <Landmark className="w-5 h-5 text-white/80" />
+            <div className="w-11 h-11 rounded-xl bg-tint flex items-center justify-center mb-5">
+              <Landmark className="w-5 h-5 text-body" />
             </div>
             <h3 className="font-semibold mb-2">The company side</h3>
-            <p className="text-white/60 text-sm">
+            <p className="text-body text-sm">
               Formed Nostia LLC in New Hampshire, handled state compliance filings, and co-authored
               and stress-tested the company charter. I run the company as CEO with a five-person
               team.
@@ -384,7 +381,7 @@ export default function OlafWoodall() {
             rel="noopener noreferrer"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-white text-black font-medium shadow-lg shadow-white/10"
+            className="inline-flex items-center gap-3 px-6 py-3 bg-ink text-white font-medium hover:bg-black transition-colors"
           >
             <Apple className="w-7 h-7 fill-current" aria-hidden="true" />
             <span className="text-left leading-tight">
@@ -405,10 +402,10 @@ export default function OlafWoodall() {
         viewport={viewport}
         className="mt-24 sm:mt-36"
       >
-        <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-4">
+        <motion.h2 variants={fadeUp} className="font-serif text-2xl sm:text-3xl text-center mb-4">
           Hardware & embedded systems
         </motion.h2>
-        <motion.p variants={fadeUp} className="text-white/60 max-w-2xl mx-auto text-center mb-10 sm:mb-14">
+        <motion.p variants={fadeUp} className="text-body max-w-2xl mx-auto text-center mb-10 sm:mb-14">
           Custom flight hardware and a high-voltage EV pack — designed, built, and debugged from
           the power topology up.
         </motion.p>
@@ -419,19 +416,19 @@ export default function OlafWoodall() {
               key={title}
               variants={fadeUp}
               whileHover={{ y: -6 }}
-              className="border border-white/10 bg-white/5 rounded-2xl p-6 sm:p-8 hover:border-white/25 transition-colors"
+              className="border border-rule bg-tint rounded-2xl p-6 sm:p-8 hover:border-ink transition-colors"
             >
               <div className="flex items-center justify-between mb-5">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400/20 to-indigo-500/20 border border-white/10 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-sky-300" />
+                <div className="w-11 h-11 rounded-xl bg-tint border border-rule flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-accent" />
                 </div>
                 <StatusBadge status={status} />
               </div>
               <h3 className="font-semibold text-lg mb-4">{title}</h3>
               <ul className="space-y-3">
                 {points.map((point) => (
-                  <li key={point} className="flex gap-3 text-white/60 text-sm">
-                    <CircuitBoard className="w-4 h-4 mt-0.5 shrink-0 text-white/30" />
+                  <li key={point} className="flex gap-3 text-body text-sm">
+                    <CircuitBoard className="w-4 h-4 mt-0.5 shrink-0 text-muted" />
                     {point}
                   </li>
                 ))}
@@ -449,7 +446,7 @@ export default function OlafWoodall() {
         viewport={viewport}
         className="mt-24 sm:mt-36"
       >
-        <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-10 sm:mb-14">
+        <motion.h2 variants={fadeUp} className="font-serif text-2xl sm:text-3xl text-center mb-10 sm:mb-14">
           Other software
         </motion.h2>
 
@@ -459,19 +456,19 @@ export default function OlafWoodall() {
               key={title}
               variants={fadeUp}
               whileHover={{ y: -6 }}
-              className="border border-white/10 bg-white/5 rounded-2xl p-6 sm:p-8 hover:border-white/25 transition-colors"
+              className="border border-rule bg-tint rounded-2xl p-6 sm:p-8 hover:border-ink transition-colors"
             >
-              <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center mb-5">
-                <Icon className="w-5 h-5 text-white/80" />
+              <div className="w-11 h-11 rounded-xl bg-tint flex items-center justify-center mb-5">
+                <Icon className="w-5 h-5 text-body" />
               </div>
               <h3 className="font-semibold text-lg mb-2">{title}</h3>
-              <p className="text-white/60 text-sm sm:text-base">{text}</p>
+              <p className="text-body text-sm sm:text-base">{text}</p>
               {href && (
                 <a
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm text-sky-300 hover:text-sky-200 transition"
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm text-accent hover:underline transition"
                 >
                   {linkLabel}
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -490,7 +487,7 @@ export default function OlafWoodall() {
         viewport={viewport}
         className="mt-24 sm:mt-36"
       >
-        <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-10 sm:mb-14">
+        <motion.h2 variants={fadeUp} className="font-serif text-2xl sm:text-3xl text-center mb-10 sm:mb-14">
           Writing & intellectual interests
         </motion.h2>
 
@@ -500,16 +497,16 @@ export default function OlafWoodall() {
               key={title}
               variants={fadeUp}
               whileHover={{ y: -6 }}
-              className="border border-white/10 bg-white/5 rounded-2xl p-6 hover:border-white/25 transition-colors"
+              className="border border-rule bg-tint rounded-2xl p-6 hover:border-ink transition-colors"
             >
               <div className="flex items-center justify-between mb-5">
-                <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-white/80" />
+                <div className="w-11 h-11 rounded-xl bg-tint flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-body" />
                 </div>
                 {status && <StatusBadge status={status} />}
               </div>
               <h3 className="font-semibold mb-2">{title}</h3>
-              <p className="text-white/60 text-sm">{text}</p>
+              <p className="text-body text-sm">{text}</p>
             </motion.div>
           ))}
         </div>
@@ -523,23 +520,23 @@ export default function OlafWoodall() {
         viewport={viewport}
         className="mt-24 sm:mt-36"
       >
-        <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-bold text-center mb-10 sm:mb-14">
+        <motion.h2 variants={fadeUp} className="font-serif text-2xl sm:text-3xl text-center mb-10 sm:mb-14">
           Education & skills
         </motion.h2>
 
         <motion.div
           variants={fadeUp}
-          className="border border-white/10 bg-white/5 rounded-2xl p-6 sm:p-8 mb-4 sm:mb-6"
+          className="border border-rule bg-tint rounded-2xl p-6 sm:p-8 mb-4 sm:mb-6"
         >
           <div className="flex items-start gap-4">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400/20 to-indigo-500/20 border border-white/10 flex items-center justify-center shrink-0">
-              <GraduationCap className="w-5 h-5 text-sky-300" />
+            <div className="w-11 h-11 rounded-xl bg-tint border border-rule flex items-center justify-center shrink-0">
+              <GraduationCap className="w-5 h-5 text-accent" />
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-1">
-                B.S. Mechanical Engineering <span className="text-white/40 text-sm font-normal">(expected Spring 2028)</span>
+                B.S. Mechanical Engineering <span className="text-muted text-sm font-normal">(expected Spring 2028)</span>
               </h3>
-              <p className="text-white/60 text-sm sm:text-base">
+              <p className="text-body text-sm sm:text-base">
                 Colorado School of Mines, Golden, CO. Coursework includes thermodynamics (Rankine
                 and combined-cycle analysis with EES), structural mechanics (beam analysis, Mohr's
                 circle, shear/moment diagrams), engineering economics (MACRS depreciation and
@@ -554,13 +551,13 @@ export default function OlafWoodall() {
             <motion.div
               key={area}
               variants={fadeUp}
-              className="border border-white/10 bg-white/5 rounded-2xl p-5"
+              className="border border-rule bg-tint rounded-2xl p-5"
             >
               <div className="flex items-center gap-2 mb-2">
-                <Wrench className="w-4 h-4 text-white/40" />
-                <h3 className="font-semibold text-sm uppercase tracking-wider text-white/80">{area}</h3>
+                <Wrench className="w-4 h-4 text-muted" />
+                <h3 className="font-semibold text-sm uppercase tracking-wider text-body">{area}</h3>
               </div>
-              <p className="text-white/60 text-sm">{items}</p>
+              <p className="text-body text-sm">{items}</p>
             </motion.div>
           ))}
         </div>
@@ -576,13 +573,12 @@ export default function OlafWoodall() {
       >
         <motion.div
           variants={fadeUp}
-          className="relative overflow-hidden border border-white/10 rounded-3xl px-6 py-14 sm:px-12 sm:py-20 text-center"
+          className="relative overflow-hidden border border-rule rounded-3xl px-6 py-14 sm:px-12 sm:py-20 text-center"
         >
-          <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 h-72 w-[36rem] rounded-full bg-indigo-500/20 blur-3xl" />
 
           <div className="relative">
-            <h2 className="text-2xl sm:text-4xl font-bold mb-4">Get in touch</h2>
-            <p className="text-white/60 max-w-xl mx-auto mb-10">
+            <h2 className="font-serif text-2xl sm:text-3xl mb-4">Get in touch</h2>
+            <p className="text-body max-w-xl mx-auto mb-10">
               The best ways to reach me — or to see what I've shipped.
             </p>
 
@@ -593,7 +589,7 @@ export default function OlafWoodall() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-medium shadow-lg shadow-white/10"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-ink text-white font-medium hover:bg-black transition-colors"
               >
                 <Linkedin className="w-5 h-5" />
                 Connect on LinkedIn
@@ -604,7 +600,7 @@ export default function OlafWoodall() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 border border-white/20 px-6 py-3 rounded-xl hover:bg-white/10 hover:border-white/40 transition"
+                className="inline-flex items-center gap-2 border border-rule px-6 py-3 rounded-xl hover:bg-tint hover:border-ink transition"
               >
                 <Github className="w-5 h-5" />
                 GitHub
@@ -613,7 +609,7 @@ export default function OlafWoodall() {
                 href="/home"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 border border-white/20 px-6 py-3 rounded-xl hover:bg-white/10 hover:border-white/40 transition"
+                className="inline-flex items-center gap-2 border border-rule px-6 py-3 rounded-xl hover:bg-tint hover:border-ink transition"
               >
                 <ExternalLink className="w-5 h-5" />
                 nostia.io

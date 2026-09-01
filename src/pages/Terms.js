@@ -36,10 +36,10 @@ const sections = [
 export default function Terms() {
   return (
     <main className="w-full max-w-5xl flex-1">
-      <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-center">
+      <h2 className="font-serif text-3xl sm:text-4xl text-ink mb-4">
         Terms of Service
       </h2>
-      <p className="text-white/60 text-center mb-8 sm:mb-12 text-sm sm:text-base">
+      <p className="text-body mb-10 sm:mb-12">
         How Nostia handles your data
       </p>
 
@@ -47,12 +47,12 @@ export default function Terms() {
         {sections.map((section, index) => (
           <div
             key={index}
-            className="border border-white/10 p-5 sm:p-8 rounded-lg bg-white/5"
+            className="border-t border-ink pt-5"
           >
-            <h3 className="text-lg sm:text-xl font-semibold mb-3">
+            <h3 className="font-serif text-lg sm:text-xl text-ink mb-3">
               {section.title}
             </h3>
-            <p className="text-white/70 text-sm sm:text-base leading-relaxed">
+            <p className="text-body text-sm sm:text-base leading-relaxed">
               {section.content}
             </p>
           </div>
