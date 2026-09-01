@@ -58,6 +58,7 @@ jobs:
           test -f build/index.html || { echo "::error::build/index.html missing"; exit 1; }
           test -f build/console/index.html || { echo "::error::console missing from build"; exit 1; }
           test -f build/.well-known/apple-app-site-association || { echo "::error::AASA missing — passkeys and universal links would break"; exit 1; }
+          test -f build/Nostia-orgs-deck.pdf || { echo "::error::Nostia-orgs-deck.pdf missing — the Investor Deck link in the header, footer and /contact would 404. Export the deck to public/Nostia-orgs-deck.pdf"; exit 1; }
           echo "build output verified: $(find build -type f | wc -l) files"
 
       - name: Publish to the public deploy repo

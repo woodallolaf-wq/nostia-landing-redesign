@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Source deck. Export to public/Nostia-orgs-deck.pdf; the .pptx itself is not deployed.
+*.pptx

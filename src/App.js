@@ -4,19 +4,22 @@ import { motion, AnimatePresence, useScroll, useSpring, useMotionValueEvent } fr
 import { Menu, X, Mail, ArrowRight } from "lucide-react";
 import logo from "./nostia-transparent.png";
 import Home from "./pages/Home";
-import About from "./pages/About";
-import Newsletter from "./pages/Newsletter";
-import Organizations from "./pages/Organizations";
+import Universities from "./pages/Universities";
+import Students from "./pages/Students";
+import Contact from "./pages/Contact";
 import Terms from "./pages/Terms";
 import OrgTerms from "./pages/OrgTerms";
 import OlafWoodall from "./pages/OlafWoodall";
 
 const navLinks = [
   { to: "/home", label: "Home" },
-  { to: "/about", label: "About" },
-  { to: "/organizations", label: "For Organizations" },
-  { to: "/newsletter", label: "Newsletter" },
+  { to: "/universities", label: "For Universities" },
+  { to: "/students", label: "For Students" },
+  { to: "/contact", label: "Contact" },
 ];
+
+const APP_STORE_URL = "https://apps.apple.com/us/app/nostia/id6762099952";
+const DECK_URL = "/Nostia-orgs-deck.pdf";
 
 /**
  * The console is a static app served from /console/, outside this router — so
@@ -52,7 +55,7 @@ function ScrollProgress() {
   return (
     <motion.div
       style={{ scaleX }}
-      className="fixed top-0 left-0 right-0 h-[3px] origin-left z-50 bg-gradient-to-r from-sky-400 via-indigo-400 to-fuchsia-400"
+      className="fixed top-0 left-0 right-0 h-[3px] origin-left z-50 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500"
     />
   );
 }
@@ -101,7 +104,7 @@ function Header() {
             Support
           </a>
           <a
-            href="/Nostia-deck.pdf"
+            href={DECK_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm border border-white/20 px-4 py-1.5 rounded-full hover:bg-white/10 hover:border-white/40 transition"
@@ -151,7 +154,7 @@ function Header() {
               <div className="flex flex-wrap gap-2 mt-3">
                 <OrgSignInButton onClick={closeMenu} className="!py-2" />
                 <a
-                  href="/Nostia-deck.pdf"
+                  href={DECK_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="border border-white/20 px-4 py-2 rounded-full hover:bg-white/10 transition w-fit"
@@ -175,8 +178,9 @@ function Footer() {
         <div>
           <img src={logo} alt="Nostia" className="h-10 w-auto mb-4" />
           <p className="text-white/50 text-sm max-w-xs">
-            Where the trip leaves the group chat. One app for adventures, trips,
-            payments, events, and the people you actually want to see.
+            Verified presence for campus programmes. One platform for attendance,
+            class organization, and every club meeting and campus event across
+            the year.
           </p>
           <a
             href="mailto:nostiaexecutive@nostia.io"
@@ -209,6 +213,16 @@ function Footer() {
               </a>
             </li>
             <li>
+              <a
+                href={APP_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/50 hover:text-white transition"
+              >
+                Nostia for students — App Store
+              </a>
+            </li>
+            <li>
               <a href="/support" className="text-white/50 hover:text-white transition">
                 Support
               </a>
@@ -225,7 +239,7 @@ function Footer() {
             </li>
             <li>
               <a
-                href="/Nostia-deck.pdf"
+                href={DECK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/50 hover:text-white transition"
@@ -258,13 +272,20 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/newsletter" element={<Newsletter />} />
-            <Route path="/organizations" element={<Organizations />} />
+            <Route path="/universities" element={<Universities />} />
+            <Route path="/students" element={<Students />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/organization-terms" element={<OrgTerms />} />
-            {/* Common aliases people type or link to. Cheaper than a support email. */}
-            <Route path="/orgs" element={<Navigate to="/organizations" replace />} />
-            <Route path="/organisations" element={<Navigate to="/organizations" replace />} />
+            {/* Retired with the pivot away from the consumer travel product.
+                These were in the nav and the sitemap for months, so they
+                redirect rather than 404. */}
+            <Route path="/about" element={<Navigate to="/home" replace />} />
+            <Route path="/newsletter" element={<Navigate to="/home" replace />} />
+            {/* /organizations was the live B2B page and is linked off-site;
+                the rest are aliases people type. Cheaper than a support email. */}
+            <Route path="/organizations" element={<Navigate to="/universities" replace />} />
+            <Route path="/orgs" element={<Navigate to="/universities" replace />} />
+            <Route path="/organisations" element={<Navigate to="/universities" replace />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/olaf-woodall" element={<OlafWoodall />} />
             {/* Without this, an unmatched path renders an empty content area —
