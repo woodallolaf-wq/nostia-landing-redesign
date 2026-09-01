@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Building2, FileText, LifeBuoy, Mail, TrendingUp } from "lucide-react";
+import { ArrowRight, Building2, LifeBuoy, Mail, TrendingUp } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
 // Contact — three lanes that must not be mixed.
@@ -20,7 +20,6 @@ const INVESTORS = "mailto:nostiaexecutive@nostia.io?subject=Nostia-Orgs%20—%20
 // Same inbox the static /support page already publishes. There is no
 // support@nostia.io — do not invent one here.
 const SUPPORT = "mailto:nostiaexecutive@nostia.io?subject=Nostia%20support";
-const DECK_URL = "/Nostia-orgs-deck.pdf";
 
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = {
@@ -122,28 +121,17 @@ export default function Contact() {
           <h2 className="text-xl sm:text-2xl font-bold mb-3">Investors</h2>
           <p className="text-white/60 mb-8 flex-1">
             Nostia LLC is raising against a built product and pilots this fall.
-            The deck covers the problem, the product, the sell model and the
-            numbers behind them.
+            Ask and we will send the deck — the problem, the product, the sell
+            model and the numbers behind them.
           </p>
 
-          <div className="flex flex-col gap-3">
-            <a
-              href={DECK_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-white/20 hover:bg-white/10 hover:border-white/40 transition"
-            >
-              <FileText className="w-4 h-4" />
-              Download the deck
-            </a>
-            <a
-              href={INVESTORS}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-semibold hover:bg-white/90 transition"
-            >
-              <Mail className="w-4 h-4" />
-              nostiaexecutive@nostia.io
-            </a>
-          </div>
+          <a
+            href={INVESTORS}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white text-black font-semibold hover:bg-white/90 transition"
+          >
+            <Mail className="w-4 h-4" />
+            nostiaexecutive@nostia.io
+          </a>
         </motion.div>
 
         <motion.div

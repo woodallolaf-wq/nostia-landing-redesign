@@ -88,7 +88,6 @@ missing from the build:
 | `build/CNAME` | Pages drops the custom domain on the next deploy |
 | `build/.well-known/apple-app-site-association` | iOS passkeys stop working — the app is no longer authorized for the `nostia.io` relying party |
 | `build/console/index.html` | The Orgs console 404s |
-| `build/Nostia-orgs-deck.pdf` | The Investor Deck link in the header, footer and `/contact` 404s. Export the deck to `public/Nostia-orgs-deck.pdf` |
 
 ## Rollback
 

@@ -19,7 +19,6 @@ const navLinks = [
 ];
 
 const APP_STORE_URL = "https://apps.apple.com/us/app/nostia/id6762099952";
-const DECK_URL = "/Nostia-orgs-deck.pdf";
 
 /**
  * The console is a static app served from /console/, outside this router — so
@@ -103,14 +102,6 @@ function Header() {
           <a href="/support" className="text-sm text-white/60 hover:text-white transition">
             Support
           </a>
-          <a
-            href={DECK_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm border border-white/20 px-4 py-1.5 rounded-full hover:bg-white/10 hover:border-white/40 transition"
-          >
-            Investor Deck
-          </a>
           <OrgSignInButton />
         </nav>
 
@@ -153,15 +144,6 @@ function Header() {
               </Link>
               <div className="flex flex-wrap gap-2 mt-3">
                 <OrgSignInButton onClick={closeMenu} className="!py-2" />
-                <a
-                  href={DECK_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="border border-white/20 px-4 py-2 rounded-full hover:bg-white/10 transition w-fit"
-                  onClick={closeMenu}
-                >
-                  Investor Deck
-                </a>
               </div>
             </div>
           </motion.nav>
@@ -236,16 +218,6 @@ function Footer() {
               <Link to="/organization-terms" className="text-white/50 hover:text-white transition">
                 Organization Terms
               </Link>
-            </li>
-            <li>
-              <a
-                href={DECK_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/50 hover:text-white transition"
-              >
-                Investor Deck (PDF)
-              </a>
             </li>
           </ul>
         </div>
