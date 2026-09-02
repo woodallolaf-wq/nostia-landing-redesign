@@ -7,9 +7,9 @@ import { Apple } from "lucide-react";
 // The student side of Nostia-Orgs.
 //
 // A student is not the buyer, so this page sells nothing — it answers "what is
-// this thing my professor told me to download, and what does it know about me."
-// The privacy answer is the second question every student actually has, so it
-// gets a section rather than a line in the footer.
+// this thing my orientation leader told me to download, and what does it know
+// about me." The privacy answer is the second question every student actually
+// has, so it gets a section rather than a line in the footer.
 // ─────────────────────────────────────────────────────────────
 
 // While null, the button renders as a "Coming soon" placeholder.
@@ -61,20 +61,20 @@ export function AppStoreButton() {
 
 const features = [
   {
-    title: "Check in without the clipboard",
-    text: "Answer the question on the screen, or arrive at the stop and let your phone confirm it. No sheet going round the room, no clicker to remember, no email to your professor two days later explaining that you were there.",
-  },
-  {
-    title: "Your classes, organized",
-    text: "Readings, slides, room numbers and this week's schedule sit on the section itself — so the thing your professor posted is in the place you would look for it.",
+    title: "A tour that actually walks you there",
+    text: "Not a PDF map. A guided route that takes you to the right door, tells you what happens once you are inside, and answers what you are looking at on the way. Do it in your own time, in your first week or in your sixth.",
   },
   {
     title: "Everything happening tonight",
-    text: "Club meetings, involvement fairs, residence-hall events and campus-wide things, all in the same feed. Scan the QR on a door and you are in.",
+    text: "Orientation events, club meetings, involvement fairs and residence-hall things, all in the same feed. Scan the QR on a door or a poster and you are in.",
+  },
+  {
+    title: "The clubs you signed up for",
+    text: "The eleven clipboards you scribbled on at the fair turn into eleven clubs whose meetings, chat and announcements land in one place — so the one you liked can still reach you in November.",
   },
   {
     title: "A record of what you turned up to",
-    text: "Verified attendance across four years of clubs, sections and events — the involvement history you would otherwise have to reconstruct from memory for an application.",
+    text: "Verified attendance across four years of clubs and campus events — the involvement history you would otherwise have to reconstruct from memory for an application.",
   },
 ];
 
@@ -95,15 +95,16 @@ export default function Students() {
             variants={fadeIn}
             className="font-serif text-4xl sm:text-5xl text-ink leading-[1.1] tracking-tight mb-6 max-w-3xl"
           >
-            Your classes and your clubs, in one app.
+            Find your way. Find your people.
           </motion.h1>
 
           <motion.p
             variants={fadeIn}
             className="text-lg text-body leading-relaxed max-w-2xl mb-9"
           >
-            Check into a lecture in a tap. Find every meeting and event on your
-            campus. Keep a real record of what you showed up for.
+            An AI-guided tour of your campus, every event your university is
+            putting on, and the clubs worth joining — with the chat and
+            announcements that keep you in them.
           </motion.p>
 
           <motion.div variants={fadeIn}>
@@ -111,7 +112,7 @@ export default function Students() {
           </motion.div>
 
           <motion.p variants={fadeIn} className="text-sm text-muted mt-8">
-            Free for students. Scan the QR from a poster or a professor and you are in.
+            Free for students. Scan the QR from a poster or an orientation leader and you are in.
           </motion.p>
         </motion.div>
       </section>
@@ -151,16 +152,17 @@ export default function Students() {
             What your school can see
           </h2>
           <p className="text-body text-sm leading-relaxed mb-4">
-            Your professor sees that their section checked in. Your club sees that
-            its meeting filled the room. Neither of them gets a list of names out
-            of Nostia — every figure an organization receives is aggregated, and
-            any number covering fewer than five distinct people is withheld
-            entirely, because an aggregate over three people on a small campus is
-            a name.
+            Nothing to do with your classes — Nostia is not a class app, and no
+            professor takes attendance with it. Your club sees that its meeting
+            filled the room. Student life sees how many people finished the tour.
+            Neither of them gets a list of names out of Nostia — every figure an
+            organization receives is aggregated, and any number covering fewer
+            than five distinct people is withheld entirely, because an aggregate
+            over three people on a small campus is a name.
           </p>
           <p className="text-body text-sm leading-relaxed">
-            Location is read while you are checking in, not followed around
-            campus. The full detail is in the{" "}
+            Location is read while you are on a tour or checking in, not followed
+            around campus. The full detail is in the{" "}
             <Link to="/terms" className="text-accent hover:underline">
               Terms of Service
             </Link>
@@ -181,9 +183,9 @@ export default function Students() {
           Get the app.
         </motion.h2>
         <motion.p variants={fadeIn} className="text-body max-w-2xl mb-8 leading-relaxed">
-          Classes, clubs and events only appear once your school has a
-          Nostia-Orgs account. If yours doesn't yet, tell the person who runs your
-          programme — that is usually all it takes.
+          Tours, events and clubs only appear once your school has a Nostia-Orgs
+          account. If yours doesn't yet, tell whoever runs orientation or student
+          life — that is usually all it takes.
         </motion.p>
 
         <motion.div variants={fadeIn}>

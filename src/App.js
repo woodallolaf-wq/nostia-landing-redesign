@@ -148,9 +148,9 @@ function Footer() {
         <div>
           <img src={logo} alt="Nostia" className="h-9 w-auto mb-4" />
           <p className="text-body text-sm max-w-xs leading-relaxed">
-            Verified presence for campus programmes. One platform for attendance,
-            class organization, and every club meeting and campus event across
-            the year.
+            AI orientation for universities. Guided campus tours, the events an
+            institution hosts, and every club meeting across the year — in one
+            app.
           </p>
           <a
             href="mailto:nostiaexecutive@nostia.io"

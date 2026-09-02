@@ -2,8 +2,14 @@ import React from "react";
 import { motion } from "framer-motion";
 
 // ─────────────────────────────────────────────────────────────
-// Nostia-Orgs — the page a dean, a provost's office or a director of student
-// life reads before agreeing to a meeting.
+// Nostia-Orgs — the page a dean of students, an orientation office or a
+// director of student life reads before agreeing to a meeting.
+//
+// The buyer here is student life, not the registrar and not a faculty. Nostia
+// is an orientation and involvement platform: the institution hosts events,
+// clubs run the week-to-week, and students are guided between the two by an
+// AI tour. It is NOT a classroom attendance tool — that claim was on this page
+// for one release and is wrong. Do not reintroduce it.
 //
 // Two rules this page still follows deliberately:
 //
@@ -30,38 +36,65 @@ const fadeIn = {
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } };
 const viewport = { once: true, margin: "-60px" };
 
+// What the institution is actually trying to solve, in its own terms. This
+// runs before the capability list on purpose: a director of student life is
+// not shopping for features, they are being asked to move a retention number
+// with the staff and the budget they already have.
+const needs = [
+  {
+    title: "Get a whole cohort oriented in a week",
+    text: "A few thousand people arrive at once and have to find buildings, offices and each other before teaching starts. There are not enough staff and student leaders to walk all of them, and the ones who need it most are the ones who do not ask.",
+  },
+  {
+    title: "Fill the events you have already paid for",
+    text: "The orientation programme, the involvement fair and the welcome socials are budgeted whether or not anyone turns up. The problem was never supply — it is that a first-year cannot find out what is on tonight.",
+  },
+  {
+    title: "Keep clubs alive past September",
+    text: "Clubs collect sign-ups they have no way to contact. Every club that quietly folds in October takes a dozen students' reason to stay with it.",
+  },
+  {
+    title: "Show that it worked",
+    text: "Student life is asked for a retention story every spring and answers with a headcount and a survey nobody trusts. What is missing is where a cohort actually went, while there is still time to change it.",
+  },
+  {
+    title: "Without starting an IT project",
+    text: "No integration to negotiate, no engineering time to request, no data warehouse to stand up. One institutional account, authored by the people who run the programme.",
+  },
+];
+
 const capabilities = [
   {
-    title: "Verification",
-    text: "A geofence dwell plus photo judging proves a student was physically at the stop. Attendance a dean can defend, rather than a sign-in sheet nobody audits.",
+    title: "AI campus tours",
+    text: "A self-paced guided route that takes a student to the door they actually need, tells them what happens once they are inside, and answers what they are looking at along the way. Run it during orientation week, and leave it up all year for transfers, exchange students and anyone who arrives late.",
   },
   {
-    title: "Classroom attendance",
-    text: "A professor runs a check-in question from the podium and watches the room answer. Presence and comprehension in the same tap, on the phone the student already brought — nothing for the department to buy, issue or replace.",
+    title: "Orientation and introduction events",
+    text: "Move-in, faculty welcomes, socials, the involvement fair — everything the institution puts on to get a cohort through the door, published once and findable by every student who downloaded the app.",
   },
   {
-    title: "Class organization",
-    text: "Readings, slides, room changes and the week ahead attached to the section itself. One place a student looks, instead of an LMS, an email and a group chat that disagree.",
+    title: "Clubs",
+    text: "Every recognised club gets a page, a calendar and a membership. The eleven sign-ups a student scrawled at the involvement fair become eleven clubs that can actually reach them.",
   },
   {
-    title: "Campus and club events",
-    text: "Residence life, the rec centre and every recognised club publish into the same app the class already uses, with the same verification behind attendance at each one.",
+    title: "Verified attendance",
+    text: "A geofence dwell plus photo judging proves a student was physically at the stop or the meeting. Participation figures a club and a student-life office can both stand behind, rather than a sign-in sheet nobody audits.",
+  },
+  {
+    title: "Chat and announcements",
+    text: "Built into the app the meetings already live in. A club officer posts once and reaches the members who joined — no separate group chat, no student left off it.",
   },
   {
     title: "Analytics",
-    text: "Per-stop and per-session drop-off across a whole cohort, scoped to the version people actually walked. Small groups are suppressed, so a figure can never identify a student.",
+    text: "Per-stop and per-event drop-off across a whole cohort, scoped to the version people actually walked. Small groups are suppressed, so a figure can never identify a student.",
   },
   {
     title: "Authoring",
-    text: "Any staff member, professor or peer mentor builds a route, a section or an event without engineering help — per-stop text, a verification criterion, a reference photo, and a geofence. Authored on mobile, standing at the stop you are anchoring.",
+    text: "Any staff member, orientation leader or club officer builds a route or an event without engineering help — per-stop text, a verification criterion, a reference photo, and a geofence. Authored on mobile, standing at the stop you are anchoring.",
   },
   {
-    title: "Distribution",
-    text: "Printed QR on a residence-hall door, and invite codes scoped to a single club or section. The code survives an App Store install, so a poster works on a first-year who has never heard of Nostia.",
-  },
-  {
-    title: "Branding",
-    text: "Departmental identity inside one institutional account, so Residence Life and the Rec Centre can each look like themselves.",
+    title: "Distribution and branding",
+    text: "Printed QR on a residence-hall door or an orientation packet, and invite codes scoped to a single club. The code survives an App Store install, so a poster works on a first-year who has never heard of Nostia. Departments keep their own identity inside one institutional account.",
   },
 ];
 
@@ -78,17 +111,17 @@ const steps = [
   {
     n: "01",
     title: "Author it",
-    text: "A department builds its own — a Welcome Week route walked once on mobile, a semester of sections, or a club's event calendar. No engineering ticket, no waiting on IT.",
+    text: "Student life builds its own — a Welcome Week tour route walked once on mobile, an orientation calendar, and a club roster handed to the officers who run them. No engineering ticket, no waiting on IT.",
   },
   {
     n: "02",
     title: "Publish and distribute",
-    text: "Publish into the Nostia app, print the QR for residence-hall doors and orientation packets, and hand invite codes to the clubs and sections that need them.",
+    text: "Publish into the Nostia app, print the QR for residence-hall doors and orientation packets, and hand invite codes to the clubs that need them.",
   },
   {
     n: "03",
     title: "Read the funnel",
-    text: "Watch where a cohort went and where it dropped off, stop by stop and session by session, while the term is still running and you can still act on it.",
+    text: "Watch where a cohort went and where it dropped off, stop by stop and event by event, while the term is still running and you can still act on it.",
   },
 ];
 
@@ -124,16 +157,16 @@ export default function Universities() {
             variants={fadeIn}
             className="font-serif text-4xl sm:text-5xl text-ink leading-[1.1] tracking-tight mb-6 max-w-3xl"
           >
-            Attendance a dean can defend.
+            Orientation that doesn't end in September.
           </motion.h1>
 
           <motion.p
             variants={fadeIn}
             className="text-lg text-body leading-relaxed max-w-2xl mb-9"
           >
-            An institutional subscription covering the attendance a professor
-            takes in a lecture hall, the materials and locations that hold a
-            class together, and every club meeting, involvement fair and
+            An institutional subscription covering the AI campus tours that get a
+            first-year oriented, the introduction events you host to bring a
+            cohort together, and every club meeting, involvement fair and
             residence-life event across the year.
           </motion.p>
 
@@ -159,6 +192,38 @@ export default function Universities() {
         </motion.div>
       </section>
 
+      {/* ── What you need ──
+          Ahead of the capability list, because the buyer's problem is the thing
+          they came to the page with. Features only mean something once the need
+          they answer has been named. */}
+      <motion.section
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewport}
+        className="py-14 sm:py-20 border-b border-rule"
+      >
+        <motion.h2 variants={fadeIn} className="font-serif text-2xl sm:text-3xl text-ink mb-3">
+          What a university needs it to do
+        </motion.h2>
+        <motion.p variants={fadeIn} className="text-body max-w-2xl mb-10 leading-relaxed">
+          Five problems a student-life office has every autumn, with the same
+          staff and the same budget as last year.
+        </motion.p>
+
+        <motion.dl variants={fadeIn} className="border-t border-rule">
+          {needs.map(({ title, text }) => (
+            <div
+              key={title}
+              className="grid grid-cols-1 sm:grid-cols-[16rem_1fr] gap-1 sm:gap-8 border-b border-rule py-5"
+            >
+              <dt className="font-semibold text-ink">{title}</dt>
+              <dd className="text-body text-sm leading-relaxed max-w-2xl">{text}</dd>
+            </div>
+          ))}
+        </motion.dl>
+      </motion.section>
+
       {/* ── What you get ── */}
       <motion.section
         variants={stagger}
@@ -171,7 +236,7 @@ export default function Universities() {
           What you get
         </motion.h2>
         <motion.p variants={fadeIn} className="text-body max-w-2xl mb-10 leading-relaxed">
-          Eight things, in the order they create value.
+          Eight things, in the order they answer the five above.
         </motion.p>
 
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
@@ -182,6 +247,30 @@ export default function Universities() {
             </motion.div>
           ))}
         </dl>
+      </motion.section>
+
+      {/* ── The boundary ──
+          A faculty senate hears "attendance" and assumes surveillance of
+          lectures. Answering that before it is asked is cheaper than answering
+          it in the meeting. */}
+      <motion.section
+        variants={stagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewport}
+        className="py-14 sm:py-20 border-b border-rule"
+      >
+        <motion.h2 variants={fadeIn} className="font-serif text-2xl sm:text-3xl text-ink mb-3">
+          What this is not
+        </motion.h2>
+        <motion.p variants={fadeIn} className="text-body max-w-2xl leading-relaxed">
+          Nostia is not a classroom tool. It does not track attendance in
+          lectures, it holds no grades, it does not integrate with your SIS as a
+          roll-marking system, and no professor is asked to run anything from a
+          podium. What it covers is the events an institution hosts and the clubs
+          its students join — orientation, involvement, and everything that keeps
+          a first-year turning up after the welcome week ends.
+        </motion.p>
       </motion.section>
 
       {/* ── How it works ── */}
