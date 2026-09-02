@@ -6,12 +6,16 @@ import PageMasthead from "../PageMasthead";
 // ─────────────────────────────────────────────────────────────
 // The Nostia-Orgs homepage.
 //
-// One buyer, one story: a university that wants its first-years to find their
-// way, find their people, and still be turning up in November. The consumer
-// travel product this page used to sell is gone, and so is the classroom
-// framing that briefly replaced it — Nostia is not a gradebook and professors
-// do not take attendance with it. The university hosts events, clubs run the
-// week-to-week, and students are guided between the two.
+// One buyer, one story, and one claim above all the others: this is the single
+// app a campus connects through. Clubs, their meetings, and verified attendance
+// at those meetings lead the page — they are the week-to-week reason anybody
+// opens it. The AI tours and the orientation events matter because they are how
+// a first-year arrives at a club in the first place, so they follow rather than
+// lead.
+//
+// The consumer travel product this page used to sell is gone, and so is the
+// classroom framing that briefly replaced it — Nostia is not a gradebook and
+// professors do not take attendance with it.
 //
 // The register is print, not product marketing: serif headlines, hairline
 // rules, numbered lists, and no colour except on links and the primary button.
@@ -29,50 +33,53 @@ const fadeIn = {
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.07 } } };
 const viewport = { once: true, margin: "-60px" };
 
-// What a campus hands a first-year today, and why each one fails them.
+// Where a campus loses a student to its clubs today. Three failures in a row:
+// they cannot join, then they cannot be reached, then nobody can tell whether
+// any of it worked.
 const problems = [
   {
-    kicker: "Finding the place",
-    title: "A map and a schedule",
-    text: "A PDF map tells a student the building exists. It does not walk them there, and it has nothing to say when they reach the wrong door of the right building.",
-  },
-  {
-    kicker: "Finding the people",
+    kicker: "Joining",
     title: "The involvement fair",
-    text: "Two hundred tables in one afternoon. A student signs up for eleven clubs on a clipboard and hears back from two of them.",
+    text: "Two hundred tables in one afternoon. A student writes their email on eleven clipboards and hears back from two clubs.",
   },
   {
-    kicker: "Staying in",
+    kicker: "Being reached",
     title: "Eleven group chats",
-    text: "Every club runs somewhere different, and the students who most need pulling in are exactly the ones nobody remembered to add.",
+    text: "Every club runs somewhere different — a chat, a spreadsheet, an inbox nobody reads. The students who most need pulling in are exactly the ones nobody remembered to add.",
+  },
+  {
+    kicker: "Knowing it worked",
+    title: "A clipboard by the door",
+    text: "A club cannot say whether its Wednesday meeting drew forty people or nine, so the office funding it cannot either. The sheet proves a pen touched paper.",
   },
 ];
 
-// The full platform. Order is the order it creates value in.
+// The full platform. Clubs first — they are the reason the app gets opened in
+// week nine — then the events and tours that feed students into them.
 const capabilities = [
   {
-    title: "AI campus tours",
-    text: "A guided route that takes a student to the door they actually need, tells them what happens once they are inside, and answers what they are looking at on the way. Self-paced, in their own time, on the phone they already have.",
+    title: "Every club, one app",
+    text: "Each recognised club gets a page, a roster and a calendar. The eleven clipboards a student scrawled on at the fair become eleven clubs that can actually reach them, and one place to see everything they joined.",
   },
   {
-    title: "Orientation day",
-    text: "The whole of Welcome Week in one place — where to be, when, and what it is for. A first-year stops navigating a folder of PDFs and starts navigating the campus.",
+    title: "Meetings people can find",
+    text: "Time, room and what is happening, posted by the officers who run it. A student who signed up in September can still find the Wednesday meeting in November without asking anyone.",
   },
   {
-    title: "Introduction events",
-    text: "The events the university itself puts on to get a cohort through the door: move-in, faculty welcomes, socials, the involvement fair. Published once, found by everyone.",
-  },
-  {
-    title: "Clubs and their meetings",
-    text: "Every recognised club with its own page, its own calendar and its own members. A student who signed up in September can still find the room in November.",
-  },
-  {
-    title: "Verified club attendance",
-    text: "A geofence dwell plus a photo judged against the location proves someone was actually in the room. Real participation figures for a club, not a clipboard nobody audits.",
+    title: "Verified attendance",
+    text: "Members check in at the meeting itself: a geofence dwell plus a photo judged against the room proves they were actually there. A club finally knows whether Wednesday drew forty or nine — and so does the office funding it.",
   },
   {
     title: "Chat and announcements",
-    text: "Built in, so a club reaches its members where the meetings already live. An announcement lands with everyone who joined — not only whoever got added to the group chat.",
+    text: "Built into the same app the meetings live in. An officer posts once and reaches every member who joined, instead of whoever happened to get added to the group chat.",
+  },
+  {
+    title: "University events",
+    text: "Orientation, move-in, faculty welcomes, the involvement fair — everything the institution hosts, published once into the same feed the clubs are already in.",
+  },
+  {
+    title: "AI campus tours",
+    text: "How a first-year gets to any of it. A guided route that walks them to the door they need, tells them what happens inside, and answers what they are looking at on the way.",
   },
 ];
 
@@ -81,17 +88,17 @@ const steps = [
   {
     n: "01",
     title: "Author",
-    text: "Student life staff, orientation leaders and club officers build it themselves — a tour route, an introduction event, a club's calendar. No engineering, no ticket, no waiting on IT.",
+    text: "Club officers and student life staff build it themselves — a meeting, a club calendar, an orientation event, a tour route. No engineering, no ticket, no waiting on IT.",
   },
   {
     n: "02",
-    title: "Guide",
-    text: "The app routes a student stop to stop and answers questions along the way, then confirms they arrived — geofence dwell and a photo judged against the stop.",
+    title: "Verify",
+    text: "Members check in when they arrive — geofence dwell and a photo judged against the room. Presence is established at the moment it happens, not reconstructed from a sheet afterwards.",
   },
   {
     n: "03",
     title: "Measure",
-    text: "A per-stop, per-event funnel showing where a cohort went and where it stopped. Not a headcount.",
+    text: "A per-meeting, per-event funnel showing which clubs are growing and which are quietly emptying, while there is still a term left to do something about it.",
   },
 ];
 
@@ -123,17 +130,17 @@ export default function Home() {
             variants={fadeIn}
             className="font-serif text-4xl sm:text-5xl md:text-6xl text-ink leading-[1.1] tracking-tight mb-6 max-w-3xl"
           >
-            Nobody should spend first term lost.
+            One app. The whole university, connected.
           </motion.h1>
 
           <motion.p
             variants={fadeIn}
             className="text-lg sm:text-xl text-body leading-relaxed max-w-2xl mb-9"
           >
-            An AI orientation platform for universities. Campus tours that walk a
-            first-year to where they need to be, the introduction events you
-            host, and every club they could join — with attendance, chat and
-            announcements built in.
+            Every club, every meeting, and verified attendance at all of them —
+            with the chat and announcements that hold a membership together, and
+            the AI campus tours and orientation events that get a first-year
+            through the door in the first place.
           </motion.p>
 
           <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-3">
@@ -169,11 +176,11 @@ export default function Home() {
           variants={fadeIn}
           className="font-serif text-2xl sm:text-3xl text-ink mb-3"
         >
-          The first month decides the next four years.
+          A campus is thousands of people who never quite meet.
         </motion.h2>
         <motion.p variants={fadeIn} className="text-body max-w-2xl mb-10 leading-relaxed">
-          Every campus already runs orientation three ways. None of them survive
-          contact with a student who does not know anybody yet.
+          Clubs are how a student stays. Every campus already runs them three
+          ways, and a student is lost at each step.
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-rule border border-rule">
@@ -199,11 +206,11 @@ export default function Home() {
           variants={fadeIn}
           className="font-serif text-2xl sm:text-3xl text-ink mb-3"
         >
-          One platform. The whole campus.
+          Everything a student joins, in one app.
         </motion.h2>
         <motion.p variants={fadeIn} className="text-body max-w-2xl mb-10 leading-relaxed">
-          Getting oriented, getting involved and staying involved stop being
-          three systems that never talk to each other.
+          Clubs, their meetings and who turned up to them, in the same place as
+          the events that introduced a student to the club to begin with.
         </motion.p>
 
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
@@ -221,9 +228,9 @@ export default function Home() {
           variants={fadeIn}
           className="text-body text-sm leading-relaxed max-w-2xl mt-10 border-l-2 border-rule pl-5"
         >
-          Nostia is not a gradebook. It does not take attendance in lectures, and
-          no professor uses it to mark a roll. The university hosts events, clubs
-          run their own, and students are guided between the two.
+          Attendance here means a club meeting or a campus event — never a
+          lecture. Nostia is not a gradebook, no professor marks a roll with it,
+          and nothing a student does in the app reaches their transcript.
         </motion.p>
       </motion.section>
 
@@ -239,11 +246,11 @@ export default function Home() {
           variants={fadeIn}
           className="font-serif text-2xl sm:text-3xl text-ink mb-3"
         >
-          Author. Guide. Measure.
+          Author. Verify. Measure.
         </motion.h2>
         <motion.p variants={fadeIn} className="text-body max-w-2xl mb-10 leading-relaxed">
-          The same three moves whether it is a tour of campus, an orientation
-          event, or a club meeting on a Wednesday night.
+          The same three moves whether it is a club meeting on a Wednesday
+          night, an orientation event, or a tour of campus.
         </motion.p>
 
         <ol className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -320,11 +327,11 @@ export default function Home() {
         <motion.div variants={fadeIn} className="bg-white p-7 sm:p-9">
           <p className="text-xs uppercase tracking-widest text-muted mb-3">For students</p>
           <h3 className="font-serif text-xl sm:text-2xl text-ink mb-3">
-            Find your way. Find your people.
+            Every club you joined, in one place.
           </h3>
           <p className="text-body text-sm leading-relaxed mb-6">
-            Take the tour, see what's happening tonight, and join the clubs that
-            will still be there in second year.
+            Your meetings, your announcements, and a real record of what you
+            turned up to — plus the tour that got you there in week one.
           </p>
           <Link to="/students" className="text-accent font-medium hover:underline">
             Get the app →
