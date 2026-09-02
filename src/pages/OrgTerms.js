@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PageMasthead from "../PageMasthead";
 
 // ─────────────────────────────────────────────────────────────
 // Organization Terms — the B2B agreement for Nostia Orgs.
@@ -134,12 +135,8 @@ export default function OrgTerms() {
   return (
     <main className="w-full max-w-3xl">
       <div className="mb-10">
-        <span className="block text-xs uppercase tracking-[0.18em] text-muted mb-5">
-          Nostia Orgs
-        </span>
-        <h1 className="font-serif text-3xl sm:text-5xl text-ink tracking-tight mb-4">
-          Organization Terms
-        </h1>
+        {/* The page name is the heading here, so the masthead takes the <h1>. */}
+        <PageMasthead as="h1" label="Organization Terms" note="Nostia Orgs" />
         <p className="text-muted text-sm">
           Effective {EFFECTIVE} · These apply to organizations using Nostia Orgs.
           Individual accounts are governed by the{" "}

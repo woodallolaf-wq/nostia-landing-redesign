@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import PageMasthead from "../PageMasthead";
 
 // ─────────────────────────────────────────────────────────────
 // The Nostia-Orgs homepage.
@@ -115,14 +116,9 @@ export default function Home() {
     <main className="w-full max-w-5xl">
       {/* ── Hero ── */}
       <section className="pt-8 sm:pt-14 pb-14 sm:pb-20 border-b border-rule">
-        <motion.div variants={stagger} initial="hidden" animate="visible">
-          <motion.p
-            variants={fadeIn}
-            className="text-xs uppercase tracking-[0.18em] text-muted mb-6"
-          >
-            Nostia-Orgs · Pilots this fall
-          </motion.p>
+        <PageMasthead label="Nostia-Orgs" note="Pilots this fall" />
 
+        <motion.div variants={stagger} initial="hidden" animate="visible">
           <motion.h1
             variants={fadeIn}
             className="font-serif text-4xl sm:text-5xl md:text-6xl text-ink leading-[1.1] tracking-tight mb-6 max-w-3xl"

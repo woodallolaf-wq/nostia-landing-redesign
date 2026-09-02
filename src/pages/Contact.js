@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import PageMasthead from "../PageMasthead";
 
 // ─────────────────────────────────────────────────────────────
 // Contact — three lanes that must not be mixed.
@@ -32,6 +33,8 @@ export default function Contact() {
     <main className="w-full max-w-5xl">
       {/* ── Hero ── */}
       <section className="pt-8 sm:pt-14 pb-12 sm:pb-16 border-b border-rule">
+        <PageMasthead label="Contact" note="Nostia-Orgs" />
+
         <motion.div variants={stagger} initial="hidden" animate="visible">
           <motion.h1
             variants={fadeIn}

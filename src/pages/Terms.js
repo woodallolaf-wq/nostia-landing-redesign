@@ -1,4 +1,5 @@
 import React from "react";
+import PageMasthead from "../PageMasthead";
 
 const sections = [
   {
@@ -36,9 +37,10 @@ const sections = [
 export default function Terms() {
   return (
     <main className="w-full max-w-5xl flex-1">
-      <h2 className="font-serif text-3xl sm:text-4xl text-ink mb-4">
-        Terms of Service
-      </h2>
+      {/* The page name is the heading here — there is no headline underneath
+          it to compete with — so the masthead takes the <h1> slot. */}
+      <PageMasthead as="h1" label="Terms of Service" note="Individual accounts" />
+
       <p className="text-body mb-10 sm:mb-12">
         How Nostia handles your data
       </p>

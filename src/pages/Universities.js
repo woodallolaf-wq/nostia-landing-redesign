@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import PageMasthead from "../PageMasthead";
 
 // ─────────────────────────────────────────────────────────────
 // Nostia-Orgs — the page a dean of students, an orientation office or a
@@ -145,14 +146,9 @@ export default function Universities() {
     <main className="w-full max-w-5xl">
       {/* ── Hero ── */}
       <section className="pt-8 sm:pt-14 pb-14 sm:pb-20 border-b border-rule">
-        <motion.div variants={stagger} initial="hidden" animate="visible">
-          <motion.p
-            variants={fadeIn}
-            className="text-xs uppercase tracking-[0.18em] text-muted mb-6"
-          >
-            For universities
-          </motion.p>
+        <PageMasthead label="For Universities" note="Nostia-Orgs" />
 
+        <motion.div variants={stagger} initial="hidden" animate="visible">
           <motion.h1
             variants={fadeIn}
             className="font-serif text-4xl sm:text-5xl text-ink leading-[1.1] tracking-tight mb-6 max-w-3xl"
