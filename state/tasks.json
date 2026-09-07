@@ -22,9 +22,12 @@
         "Whether the new palette is derived from the existing one (ink, body, muted, accent #1A4D3A, rule, tint) by extending it, or generated fresh with the old values retained only where they still serve. The existing green accent carries brand recognition against the risk of anchoring the redesign to a palette chosen for a flat design.",
         "Whether motion constants are expressed as raw values (200ms, cubic-bezier) or as named intents (enter, settle, emphasise) that map to values. Named intents keep pages declarative and make a global timing change one edit; raw values are more obvious to a contributor reading a component cold."
       ],
-      "touched_paths": ["src/theme/**", "tailwind.config.js"],
+      "touched_paths": [
+        "src/theme/**",
+        "tailwind.config.js"
+      ],
       "depends_on": [],
-      "issue": null,
+      "issue": 1,
       "state": "open"
     },
     {
@@ -50,9 +53,13 @@
         "Whether reveal-on-scroll uses framer-motion's whileInView or a shared IntersectionObserver the primitives subscribe to. whileInView is far less code; one shared observer performs better on a page with many revealed elements and gives a single place to tune the trigger margin.",
         "Whether elements start hidden and reveal, or start visible and are only animated when the observer is available. Starting hidden looks better but shows nothing if JavaScript fails or the observer never fires — which is a real risk on a page whose job is to explain a product to a buyer."
       ],
-      "touched_paths": ["src/motion/**"],
-      "depends_on": ["t-001"],
-      "issue": null,
+      "touched_paths": [
+        "src/motion/**"
+      ],
+      "depends_on": [
+        "t-001"
+      ],
+      "issue": 2,
       "state": "open"
     },
     {
@@ -77,9 +84,12 @@
         "What 'load test' means for a static marketing site, which has no backend to saturate: concurrent requests against the static server measures the server rather than the site. The useful measurement may instead be cold-cache load under simulated slow 4G and CPU throttling. Deciding this determines whether the number is meaningful or theatre.",
         "Whether the harness runs in CI on every PR or stays a local pre-merge gate. GitHub runners are noisy enough that performance numbers vary between runs, which can make a CI budget a source of false failures rather than a safeguard."
       ],
-      "touched_paths": ["scripts/**", "docs/performance.md"],
+      "touched_paths": [
+        "scripts/**",
+        "docs/performance.md"
+      ],
       "depends_on": [],
-      "issue": null,
+      "issue": 3,
       "state": "open"
     }
   ]
