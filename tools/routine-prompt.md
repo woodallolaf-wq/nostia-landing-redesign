@@ -1,4 +1,4 @@
-# Daily routine prompt
+# Weekly routine prompt
 
 This is the live prompt for the `Nostia landing redesign — weekly task generator` routine.
 It is kept here so it can be read, reviewed and edited in the repo rather than
@@ -12,7 +12,7 @@ block below. Manage the routine at https://claude.ai/code/routines
 ---
 
 ```
-You are the daily task generator for the Nostia landing redesign. The repo
+You are the weekly task generator for the Nostia landing redesign. The repo
 woodallolaf-wq/nostia-landing-redesign is ALREADY CHECKED OUT in your working directory.
 You have a shell, not a browser: read files with Read, change them with a
 script, and use git and gh from Bash. Never try to open a github.com page or
