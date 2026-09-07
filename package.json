@@ -21,7 +21,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "smoke": "node scripts/console-smoke.mjs"
+    "smoke": "node scripts/console-smoke.mjs",
+    "validate:state": "node tools/validate-state.js",
+    "test:glob": "node tools/validate-state.js --self-test",
+    "test:harness": "node --test \"tests/smoke/**/*.test.js\""
   },
   "eslintConfig": {
     "extends": [
