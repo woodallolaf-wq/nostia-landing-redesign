@@ -1,0 +1,286 @@
+{
+  "tasks": [
+    {
+      "id": "t-001",
+      "title": "Theme token module as the single source of design values",
+      "contract": {
+        "inputs": "The existing palette and type choices in tailwind.config.js, plus the redesign's intent: an institutional register that can carry restrained motion.",
+        "outputs": "src/theme exports the complete design system as data — colour tokens, type scale, spacing scale, and motion constants (durations, easings, travel distances). tailwind.config.js is rewritten to consume it rather than define anything.",
+        "invariants": [
+          "Every colour, duration and easing used anywhere in the site resolves to a token exported from src/theme. A grep for hex codes outside src/theme returns nothing.",
+          "Motion constants live here alongside colour, so a duration is as reviewable as a shade and the two cannot drift into separate systems.",
+          "The token module is plain data, importable by both tailwind.config.js (CommonJS, build time) and React components (ESM, runtime) without duplication.",
+          "All seven existing pages render with no visual regression that was not intended by this task."
+        ],
+        "must_not_break": [
+          "tailwind.config.js must keep working as a Tailwind config — react-scripts loads it through PostCSS at build time, so whatever format the tokens take has to be requireable there.",
+          "The no-webfont decision holds: the type scale uses the existing system stack unless a task separately justifies a webfont with a measured budget."
+        ]
+      },
+      "open_decisions": [
+        "What format the tokens take so that both a CommonJS Tailwind config and ESM React components can read them without a duplicated source: a .cjs module the app imports, a JSON file both sides read, or a small build step that generates one from the other. CRA does not let you configure the Tailwind loader, which constrains this more than it first appears.",
+        "Whether the new palette is derived from the existing one (ink, body, muted, accent #1A4D3A, rule, tint) by extending it, or generated fresh with the old values retained only where they still serve. The existing green accent carries brand recognition against the risk of anchoring the redesign to a palette chosen for a flat design.",
+        "Whether motion constants are expressed as raw values (200ms, cubic-bezier) or as named intents (enter, settle, emphasise) that map to values. Named intents keep pages declarative and make a global timing change one edit; raw values are more obvious to a contributor reading a component cold."
+      ],
+      "touched_paths": [
+        "src/theme/**",
+        "tailwind.config.js"
+      ],
+      "depends_on": [],
+      "issue": 1,
+      "state": "open"
+    },
+    {
+      "id": "t-002",
+      "title": "Motion primitives with reduced-motion built into the seam",
+      "contract": {
+        "inputs": "Motion constants from src/theme, and framer-motion 12.23 which is already a dependency.",
+        "outputs": "src/motion exports the reusable animation primitives the pages compose from: reveal-on-scroll, stagger container and child, and a set of transition presets. Every primitive honours prefers-reduced-motion internally.",
+        "invariants": [
+          "src/motion is the only directory in the repo that imports framer-motion. Pages and components use these primitives instead.",
+          "Under prefers-reduced-motion: reduce, every primitive degrades to an instant state change. Content that was animated in is simply present, and no information is lost.",
+          "Reduced-motion handling lives inside the primitives, not at each call site — a contributor cannot forget it, because there is nowhere to forget it.",
+          "No primitive animates without user intent: motion responds to scroll position, hover or click, and then settles. Nothing loops.",
+          "All timing and easing values come from src/theme. This package defines none of its own."
+        ],
+        "must_not_break": [
+          "Cumulative Layout Shift stays under 0.1. Reveal-on-scroll is the classic way to ship a CLS regression, so a primitive that animates layout-affecting properties rather than transform and opacity is wrong by construction.",
+          "The site must remain readable and complete with JavaScript disabled or animation suppressed."
+        ]
+      },
+      "open_decisions": [
+        "How reduced-motion is detected and applied: a React context reading the media query once, a hook called inside each primitive, or CSS-level suppression that framer-motion respects. The context approach avoids repeated matchMedia listeners but adds a provider every page must be wrapped in.",
+        "Whether reveal-on-scroll uses framer-motion's whileInView or a shared IntersectionObserver the primitives subscribe to. whileInView is far less code; one shared observer performs better on a page with many revealed elements and gives a single place to tune the trigger margin.",
+        "Whether elements start hidden and reveal, or start visible and are only animated when the observer is available. Starting hidden looks better but shows nothing if JavaScript fails or the observer never fires — which is a real risk on a page whose job is to explain a product to a buyer."
+      ],
+      "touched_paths": [
+        "src/motion/**"
+      ],
+      "depends_on": [
+        "t-001"
+      ],
+      "issue": 2,
+      "state": "open"
+    },
+    {
+      "id": "t-003",
+      "title": "Local load test and performance budget harness",
+      "contract": {
+        "inputs": "A production build produced by npm run build, served locally.",
+        "outputs": "scripts/ gains a documented load-test and measurement harness: it serves the production build, runs a load test against it, collects Lighthouse performance and accessibility scores plus LCP and CLS for Home, and writes the numbers to a file committed in the repo.",
+        "invariants": [
+          "Runs locally with one command and requires no cloud service, no account, and no network beyond fetching the tooling.",
+          "Reports pass or fail against the budget in specs/project.md — performance >= 90, accessibility >= 95, LCP < 2.5s, CLS < 0.1 — rather than printing numbers a human has to interpret.",
+          "Results are written to a committed file, so a regression is visible as a diff rather than living in someone's terminal history.",
+          "The harness measures a production build, never the dev server. Dev-server numbers are meaningless for this purpose."
+        ],
+        "must_not_break": [
+          "The component test suite (react-scripts test) and the harness smoke test both keep passing. This repo is front-end only: do not add a backend, an API client, or any deploy configuration to make a measurement work.",
+          "No new runtime dependency. Measurement tooling belongs in devDependencies."
+        ]
+      },
+      "open_decisions": [
+        "Which tools: Lighthouse CI, a scripted lighthouse module run, or hand-rolled measurement via Playwright and the web-vitals package already in dependencies. Lighthouse CI gives budgets and history for free but is a substantial dev dependency; web-vitals is already here and measures the same field metrics with far less machinery.",
+        "What 'load test' means for a static marketing site, which has no backend to saturate: concurrent requests against the static server measures the server rather than the site. The useful measurement may instead be cold-cache load under simulated slow 4G and CPU throttling. Deciding this determines whether the number is meaningful or theatre.",
+        "Whether the harness runs in CI on every PR or stays a local pre-merge gate. GitHub runners are noisy enough that performance numbers vary between runs, which can make a CI budget a source of false failures rather than a safeguard."
+      ],
+      "touched_paths": [
+        "scripts/**",
+        "docs/performance.md"
+      ],
+      "depends_on": [],
+      "issue": 3,
+      "state": "open"
+    },
+    {
+      "id": "t-004",
+      "title": "Route-map reveal component for the Home hero",
+      "contract": {
+        "inputs": "Theme tokens (colour, motion constants) from src/theme, motion primitives from src/motion, and the campus-route narrative already on Home (\"a multi-stop walking route with GPS-and-photo verification\").",
+        "outputs": "A self-contained src/components/RouteMap component that renders a stylized campus path with sequential stop markers, revealing itself stop-by-stop on scroll using only src/motion primitives; degrades under prefers-reduced-motion to a static, fully-drawn route with all stops visible and no information lost.",
+        "invariants": [
+          "The component imports colours, spacing and typography only from src/theme, and animation only from src/motion primitives — no bespoke framer-motion usage, no hardcoded hex/ms/easing values.",
+          "Under prefers-reduced-motion: reduce, the full route and every stop marker are immediately visible and legible; nothing about the route is conveyed only through the animation.",
+          "The component renders correctly at 320px width without horizontal overflow.",
+          "The component animates only transform and opacity so it does not contribute to Cumulative Layout Shift."
+        ],
+        "must_not_break": [
+          "Existing Home page content and copy are unchanged; this task only adds a new component, it does not rewrite Home's messaging.",
+          "The component test suite (react-scripts test) and the harness smoke test both keep passing. This repo is front-end only: do not add a backend, an API client, or any deploy configuration to make a measurement work."
+        ]
+      },
+      "open_decisions": [
+        "Whether the route path is an authored SVG path (hand-drawn, campus-agnostic) or generated procedurally from an array of stop coordinates — authored is simpler and safer visually; generated is more reusable if a second route ever needs to render but risks an ugly auto-routed line.",
+        "Whether stop markers reveal one at a time in sequence (clearer causality, slower to complete) or as a staggered group with a short overlap (faster, still legible) — a real trade between narrative clarity and how many seconds of scroll it costs the buyer.",
+        "Whether the component is wired into Home.js in this task or left ready-but-unused until a follow-up task composes it into the page — composing it now proves it works in context, but doing so touches src/pages/Home.js, which risks colliding with any concurrent Home redesign task, so leaving it disconnected keeps this task's touched_paths isolated."
+      ],
+      "touched_paths": [
+        "src/components/RouteMap/**"
+      ],
+      "depends_on": [
+        "t-001",
+        "t-002"
+      ],
+      "issue": 4,
+      "state": "open"
+    },
+    {
+      "id": "t-005",
+      "title": "Drop-off funnel visualization component for per-stop analytics",
+      "contract": {
+        "inputs": "Theme tokens, motion primitives, and illustrative sample data shaped as an ordered list of {stopLabel, percentRemaining} representing per-stop drop-off, since Nostia's real analytics are not available to this repo.",
+        "outputs": "src/components/DropoffFunnel renders a funnel of stops where each bar/segment animates its size in from the previous on scroll, illustrating that analytics show drop-off stop by stop; ships with the sample dataset used as its default/story content, clearly documented as illustrative.",
+        "invariants": [
+          "Every value in the sample dataset is clearly presented as illustrative/example data, not implying it is Nostia's real usage data, since no such data is available to this repo.",
+          "The component imports colour, spacing, typography and motion only from src/theme and src/motion.",
+          "Under prefers-reduced-motion: reduce, the fully-formed funnel with all percentages is rendered immediately and is legible without the animation.",
+          "Animates only transform/opacity (or a width driven off a CSS variable set at layout time) so it introduces no measurable CLS."
+        ],
+        "must_not_break": [
+          "Existing Universities page pricing/offer content is unchanged; this component is additive, not a replacement for existing copy.",
+          "The component test suite (react-scripts test) and the harness smoke test both keep passing. This repo is front-end only: do not add a backend, an API client, or any deploy configuration to make a measurement work."
+        ]
+      },
+      "open_decisions": [
+        "Whether drop-off is shown as horizontal shrinking bars (reads immediately as a funnel) or a step line chart (more analytics-native, less immediately legible to a non-technical buyer) — a trade between instant readability and looking like 'real' analytics software.",
+        "Whether the sample dataset lives inline in the component or as a separate data file the component imports — inline keeps the component self-contained for now; a separate file makes it trivial to swap in real numbers later without touching animation code.",
+        "How many stops the sample funnel shows: matching a real Nostia route length (five to seven stops) makes the illustration credible; a shorter three-stop example is easier to keep legible in a narrow layout."
+      ],
+      "touched_paths": [
+        "src/components/DropoffFunnel/**"
+      ],
+      "depends_on": [
+        "t-001",
+        "t-002"
+      ],
+      "issue": 5,
+      "state": "open"
+    },
+    {
+      "id": "t-006",
+      "title": "Skip-to-content link and visible focus states for keyboard navigation",
+      "contract": {
+        "inputs": "The current header/nav/link markup in src/App.js and the shared App.css, and the Lighthouse accessibility >= 95 target in specs/project.md.",
+        "outputs": "A \"Skip to main content\" link that is visually hidden until keyboard-focused and jumps to each page's main content landmark, plus a visible focus outline/ring on every interactive element in the header and nav (links, the mobile menu toggle, the Org sign-in button) that currently has none.",
+        "invariants": [
+          "The skip link is the first focusable element on every page and, when activated, moves focus to a <main> (or equivalent landmark) that wraps each page's content.",
+          "Every interactive element reachable by Tab in the header/nav shows a visible focus indicator; none rely on the browser default outline being merely suppressed.",
+          "The skip link and focus styles work identically across all seven pages (Home, Students, Universities, Contact, Terms, OrgTerms, OlafWoodall).",
+          "No change to visible page layout or copy when JavaScript is disabled or the link is not focused."
+        ],
+        "must_not_break": [
+          "Existing mobile menu open/close behaviour and existing nav links keep working exactly as before.",
+          "The component test suite (react-scripts test) and the harness smoke test both keep passing. This repo is front-end only: do not add a backend, an API client, or any deploy configuration to make a measurement work."
+        ]
+      },
+      "open_decisions": [
+        "Whether focus styles are hardcoded now (a plain outline/box-shadow) and swapped for theme tokens once t-001 merges, or this task is blocked until t-001 merges so it can use the token from day one — hardcoding now unblocks an accessibility fix immediately at the cost of a follow-up edit later.",
+        "Whether the skip link's destination <main> landmark is added per-page inline in each page's own return (touching src/pages/**, out of scope here) or achieved by wrapping the shared <Routes> output in App.js in a single <main id=\"main-content\"> — wrapping in App.js keeps this task's touched_paths to App.js/App.css only, but means every page shares one landmark rather than a page-specific one.",
+        "Whether the mobile menu toggle also traps focus while open (more correct, more code, more risk of a subtle bug shipped in under three hours) or simply remains reachable by Tab without a trap (simpler, still meets the letter of keyboard accessibility but not full best-practice)."
+      ],
+      "touched_paths": [
+        "src/App.js",
+        "src/App.css"
+      ],
+      "depends_on": [],
+      "issue": 6,
+      "state": "open"
+    },
+    {
+      "id": "t-007",
+      "title": "Verification-moment component for GPS-and-photo check-ins",
+      "contract": {
+        "inputs": "Theme tokens (colour, motion constants) from src/theme, motion primitives from src/motion, and the existing \"geofence dwell plus a photo judged against the room\" verification mechanic already described in copy on Home and Universities.",
+        "outputs": "A self-contained src/components/VerificationMoment component that renders a short animation of a single verification event resolving — location lock, photo capture, confirmation — in sequence, triggered by scroll, hover or click; degrades under prefers-reduced-motion to a static final \"verified\" state with all three stages represented at once and no information lost.",
+        "invariants": [
+          "Imports colour, spacing and typography only from src/theme, animation only from src/motion primitives — no bespoke framer-motion usage, no hardcoded hex/ms/easing values.",
+          "Under prefers-reduced-motion: reduce, the full verified state and every stage it represents are immediately visible and legible.",
+          "Renders correctly at 320px width without horizontal overflow.",
+          "Animates only transform and opacity so it does not contribute to Cumulative Layout Shift."
+        ],
+        "must_not_break": [
+          "Existing Home and Universities copy is unchanged; this task only adds a new component.",
+          "The component test suite (react-scripts test) and the harness smoke test both keep passing. This repo is front-end only: do not add a backend, an API client, or any deploy configuration to make a measurement work."
+        ]
+      },
+      "open_decisions": [
+        "Whether the component always represents success (simpler, always sells) or also models a failure/retry state (more honest to how the product behaves, but risks the sales page dwelling on failure).",
+        "Whether verification is depicted abstractly (a stylized pin + camera icon sequence) or as a mocked phone-screen UI (more literal and convincing, more surface area to keep polished).",
+        "Whether the animation is scroll-triggered like RouteMap/DropoffFunnel, or replays on hover/click since it depicts a single momentary event rather than a sequence unfolding across a page — a real trade between consistency with the other two \"movement\" components and correctness for what a single verification event actually feels like."
+      ],
+      "touched_paths": [
+        "src/components/VerificationMoment/**"
+      ],
+      "depends_on": [
+        "t-001",
+        "t-002"
+      ],
+      "issue": 7,
+      "state": "open"
+    },
+    {
+      "id": "t-008",
+      "title": "Integration suite covering the buyer, offer and legal paths",
+      "contract": {
+        "inputs": "The existing pages and routes in src/App.js, and the three ground-truth paths named in specs/project.md's \"Ground truth\" section (buyer path, offer path, legal path).",
+        "outputs": "tests/integration/ gains an automated suite (using @testing-library/react, already a dependency) asserting: Home renders and its \"Book a demo\" CTA reaches Contact/mail; Universities renders with its pricing/offer content (the \"What you get\" and metrics sections) complete; Terms and OrgTerms render their full legal text with no truncation. Wired into package.json via a new script that does not change the meaning of existing scripts.",
+        "invariants": [
+          "Suite runs via a single documented command, wired into package.json without breaking existing npm test / npm run test:harness meaning.",
+          "Fails loudly (non-zero exit) if any of the three ground-truth paths regresses.",
+          "No new runtime dependency; any new tooling is a devDependency."
+        ],
+        "must_not_break": [
+          "The component test suite (react-scripts test) and the harness smoke test both keep passing. This repo is front-end only: do not add a backend, an API client, or any deploy configuration to make a measurement work.",
+          "Existing src/App.test.js keeps passing."
+        ]
+      },
+      "open_decisions": [
+        "Whether this suite reuses react-scripts test's jsdom environment (consistent with App.test.js, but sees a virtual DOM rather than a rendered page) or drives a real browser via Playwright (closer to what \"ground truth\" should mean, but a new devDependency and a slower suite).",
+        "How strict the legal-path assertions are: matching exact clause text (brittle against copy fixes) versus asserting structural completeness (word count above a threshold, no truncating overflow-hidden ancestor) — a trade between catching a real regression and false-failing on a legitimate wording tweak.",
+        "Whether this suite is wired in now as a merge gate contributors are expected to run, or left as a locally-run check until a future task adds CI wiring — this task's contract does not include CI configuration."
+      ],
+      "touched_paths": [
+        "tests/integration/**",
+        "package.json"
+      ],
+      "depends_on": [],
+      "issue": 8,
+      "state": "open"
+    },
+    {
+      "id": "t-009",
+      "title": "Compose RouteMap and DropoffFunnel into Home and Universities",
+      "contract": {
+        "inputs": "The merged RouteMap component (t-004) and DropoffFunnel component (t-005), theme tokens, and the existing copy/sections of src/pages/Home.js and src/pages/Universities.js.",
+        "outputs": "Home's hero or \"What it does\"/AI campus tours section gains the RouteMap component illustrating the tour capability already described in copy. Universities' \"What you can actually see\" (metrics) section gains the DropoffFunnel component illustrating the per-stop drop-off metric already described in copy. No copy is added, removed or reworded — only component insertion within existing sections.",
+        "invariants": [
+          "Every word of existing Home.js and Universities.js copy is unchanged; only new component tags are inserted into existing JSX.",
+          "Each component is inserted inside the section whose existing text already describes what it illustrates, not a new section.",
+          "Pages still render at 320px without horizontal overflow, and the insertion does not visibly threaten the CLS budget (each component already guarantees CLS-safety per its own contract).",
+          "Both pages keep working under prefers-reduced-motion via the components' own built-in degradation; no new reduced-motion code is written here."
+        ],
+        "must_not_break": [
+          "The buyer path (Home → Contact) and offer path (Universities pricing/offer content) stay intact per specs/project.md's Ground truth section.",
+          "The component test suite (react-scripts test) and the harness smoke test both keep passing. This repo is front-end only: do not add a backend, an API client, or any deploy configuration to make a measurement work."
+        ]
+      },
+      "open_decisions": [
+        "Whether RouteMap goes in Home's hero (immediately convinces a skimming buyer) or its \"AI campus tours\" capability card (keeps hero copy-led and consistent with the print register, costs the component prominence).",
+        "Whether DropoffFunnel replaces the existing plain metrics row for \"Verified completion rate\" or is added alongside it — replacing risks losing the exact-denominator language the spec calls a real constraint that \"must not be softened\"; adding alongside duplicates the information but keeps the precise text intact.",
+        "Whether both components ship in this single task or the task should have been split so a mid-task issue on one page doesn't block the other — feasible under three hours only if neither component needs adaptation beyond prop wiring, which won't be known until the implementer opens t-004/t-005's merged code."
+      ],
+      "touched_paths": [
+        "src/pages/Home.js",
+        "src/pages/Universities.js"
+      ],
+      "depends_on": [
+        "t-001",
+        "t-002",
+        "t-004",
+        "t-005"
+      ],
+      "issue": 9,
+      "state": "open"
+    }
+  ]
+}

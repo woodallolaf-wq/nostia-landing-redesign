@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- GitHub Pages SPA redirect hack -->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+    <meta name="theme-color" content="#ffffff" />
+    <meta
+      name="description"
+      content="Nostia-Orgs is the one app a university connects through. Every club, every meeting, and verified attendance at all of them, with built-in chat and announcements — plus AI campus tours and the orientation events an institution hosts to get first-years through the door."
+    />
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nostia.io/" />
+    <meta property="og:title" content="Nostia-Orgs — One app for a connected campus" />
+    <meta property="og:description" content="One app. The whole university, connected. Every club, every meeting and verified attendance at all of them, with chat and announcements built in — plus AI campus tours and the events an institution hosts." />
+    <meta property="og:image" content="https://nostia.io/logo192.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Nostia-Orgs — One app for a connected campus" />
+    <meta name="twitter:description" content="Every club, every meeting and verified attendance at all of them — one app for colleges and universities." />
+    <meta name="twitter:image" content="https://nostia.io/logo192.png" />
+
+    <!-- Structured Data for AI/Search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Nostia",
+      "url": "https://nostia.io",
+      "logo": "https://nostia.io/logo192.png",
+      "description": "Nostia builds Nostia-Orgs, the app a college or university connects through: club management with verified meeting attendance, built-in chat and announcements, institution-hosted orientation events, and AI-guided campus tours.",
+      "sameAs": [
+        "https://www.linkedin.com/company/nostia"
+      ],
+      "foundingDate": "2025",
+      "founder": [
+        { "@type": "Person", "name": "Olaf Woodall" },
+        { "@type": "Person", "name": "Will Chadwick" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Nostia-Orgs",
+      "url": "https://nostia.io",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "iOS, Web",
+      "description": "One app a university connects through. Clubs get a page, a roster and a calendar; members check into meetings with geofenced, photo-verified attendance; officers reach them through built-in chat and announcements. Universities publish the orientation events they host, and AI-guided campus tours walk first-years to where they need to be. Not a classroom attendance or grading tool.",
+      "audience": {
+        "@type": "EducationalAudience",
+        "educationalRole": ["student", "administrator"]
+      },
+      "publisher": { "@type": "Organization", "name": "Nostia LLC" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Nostia",
+      "url": "https://nostia.io"
+    }
+    </script>
+
+    <title>Nostia-Orgs — One app for a connected campus</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
