@@ -281,6 +281,99 @@
       ],
       "issue": 9,
       "state": "open"
+    },
+    {
+      "id": "t-010",
+      "title": "Remove hardcoded colours from src/index.css",
+      "contract": {
+        "inputs": "The current src/index.css, which hardcodes a body background and text colour (#ffffff, #444444) and a ::selection highlight (rgba(26,77,58,0.15)) that already duplicate values defined in tailwind.config.js's palette (body #444444, accent #1A4D3A), plus whatever token surface src/theme exposes once t-001 lands.",
+        "outputs": "src/index.css sources its colour values from the design tokens instead of hardcoding hex/rgba literals — via Tailwind's theme()/@apply against the same semantic colour names, or CSS custom properties emitted from the token module — so a grep for hex codes and rgba() literals outside src/theme/** returns nothing for this file.",
+        "invariants": [
+          "No hex (#xxxxxx) or rgba() colour literal remains in src/index.css.",
+          "The rendered body background, text colour and selection highlight are visually unchanged from today's values — this is a token-sourcing fix, not a restyle.",
+          "The file still compiles through CRA's existing PostCSS/Tailwind pipeline with no new build step or new runtime dependency."
+        ],
+        "must_not_break": [
+          "html's smooth-scroll behaviour and the base font-smoothing declaration are unaffected.",
+          "Every one of the seven pages still renders with the same base background and text colour it has today.",
+          "The component test suite (react-scripts test) keeps passing."
+        ]
+      },
+      "open_decisions": [
+        "index.css is plain CSS run through PostCSS, not a JS module, so it cannot require() src/theme's data the way tailwind.config.js will. Whether it instead references the same Tailwind colour names via theme()/@apply, or the theme module emits real CSS custom properties (e.g. :root { --color-body: ... }) that both Tailwind config and this file read — the first needs no new build machinery, the second is more portable if a non-Tailwind consumer of the tokens ever appears.",
+        "Whether this task is blocked on t-001 merging so it can reference the final token names from day one, or proceeds now against the current tailwind.config.js colour names and gets a follow-up edit if t-001 renames them — the same order-of-operations trade-off t-006 already faces elsewhere in this table.",
+        "Whether the ::selection highlight keeps its own literal opacity (0.15) as a one-off value that lives nowhere else, or that opacity itself becomes a themed token — how far 'single source of truth for colour' extends past solid fills into translucent overlays."
+      ],
+      "touched_paths": [
+        "src/index.css"
+      ],
+      "depends_on": [],
+      "issue": 10,
+      "state": "open"
+    },
+    {
+      "id": "t-011",
+      "title": "Migrate Students.js off direct framer-motion imports",
+      "contract": {
+        "inputs": "The existing bespoke fadeIn/stagger variant objects and motion.* JSX in src/pages/Students.js, and the finished reveal/stagger primitives src/motion exports once t-002 lands.",
+        "outputs": "src/pages/Students.js no longer imports `motion` from \"framer-motion\" directly; every reveal-on-scroll and stagger effect on the page is expressed through src/motion's exported primitives instead, with any resulting visual difference from today's timing called out in the PR.",
+        "invariants": [
+          "src/pages/Students.js contains no import of \"framer-motion\".",
+          "Reduced-motion behaviour comes from the primitives per t-002's own contract, not from any new reduced-motion code written in this file.",
+          "Every word of existing copy, and the order of sections, is unchanged.",
+          "The page still renders at 320px width with no new horizontal overflow."
+        ],
+        "must_not_break": [
+          "AppStoreButton's live/disabled rendering and its existing hover behaviour.",
+          "The Link to /terms and the Link to /universities keep working exactly as before.",
+          "The component test suite (react-scripts test) keeps passing."
+        ]
+      },
+      "open_decisions": [
+        "Whether the page's local fadeIn/stagger/viewport variant objects are deleted outright in favour of the primitives' own defaults, or kept temporarily as thin wrappers around the primitives to minimise JSX churn — a smaller, lower-risk diff versus fully committing to the new seam right away.",
+        "Whether today's exact viewport margin (-60px) and stagger timing (0.06s) are preserved as explicit primitive props for visual continuity, or replaced by whatever defaults t-002 settled on even if the on-page timing shifts slightly — single-sourcing motion versus a visible behaviour change on a live page.",
+        "Whether AppStoreButton's hover transition (a plain CSS bg-black transition-colors, not framer-motion) is left as-is since it isn't a scroll/stagger effect, or is also pulled into src/motion for total centralisation — deciding where this task's boundary of 'motion' actually sits."
+      ],
+      "touched_paths": [
+        "src/pages/Students.js"
+      ],
+      "depends_on": [
+        "t-002"
+      ],
+      "issue": 11,
+      "state": "open"
+    },
+    {
+      "id": "t-012",
+      "title": "Migrate Contact.js off direct framer-motion imports",
+      "contract": {
+        "inputs": "The existing bespoke fadeIn/stagger variant objects and motion.* JSX in src/pages/Contact.js, across its three lanes (demo, investors, support), and the finished reveal/stagger primitives src/motion exports once t-002 lands.",
+        "outputs": "src/pages/Contact.js no longer imports `motion` from \"framer-motion\" directly; every reveal-on-scroll and stagger effect on the page is expressed through src/motion's exported primitives instead, with any resulting visual difference from today's timing called out in the PR.",
+        "invariants": [
+          "src/pages/Contact.js contains no import of \"framer-motion\".",
+          "Reduced-motion behaviour comes from the primitives per t-002's own contract, not from any new reduced-motion code written in this file.",
+          "Every word of existing copy across all three lanes, and every mailto: address, is unchanged.",
+          "The page still renders at 320px width with no new horizontal overflow."
+        ],
+        "must_not_break": [
+          "The sales@ mailto link, the /console/ sign-in link, and the investor/support mailto and links all keep working exactly as before.",
+          "The distinct routing of the three lanes (demo vs investors vs support) to their separate inboxes is unchanged.",
+          "The component test suite (react-scripts test) keeps passing."
+        ]
+      },
+      "open_decisions": [
+        "Whether the three motion.section blocks (demo; investors+support) keep independently triggered whileInView reveals, or are combined under one shared stagger container from src/motion — a real behaviour difference on a page this short, where a visitor may see both sections without much scrolling between them.",
+        "Whether the plain-CSS hover transitions on the two button-styled <a> tags (bg-black / hover:bg-tint) are left untouched as ordinary CSS, since they aren't scroll or stagger effects, or are normalised to go through src/motion anyway for full centralisation — the same motion/interaction scope-boundary question as Students.js, but on this page's primary CTA.",
+        "Whether the now-unused local fadeIn/stagger/viewport consts are deleted once every section is migrated, or left in place as a fallback in case src/motion's primitives don't yet cover a case this file needs — a clean diff versus resilience if t-002's primitives turn out incomplete."
+      ],
+      "touched_paths": [
+        "src/pages/Contact.js"
+      ],
+      "depends_on": [
+        "t-002"
+      ],
+      "issue": 12,
+      "state": "open"
     }
   ]
 }
